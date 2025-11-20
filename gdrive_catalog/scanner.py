@@ -138,12 +138,17 @@ class DriveScanner:
         Returns:
             Duration in seconds, or None if not available
         """
-        # First, try to get duration from Drive API metadata
+        # Try to get duration from Drive API metadata for video files
         video_metadata = file.get("videoMediaMetadata", {})
         if "durationMillis" in video_metadata:
             return float(video_metadata["durationMillis"]) / 1000.0
 
-        # For audio files, Drive API doesn't always provide duration
+        # Try to get duration from Drive API metadata for audio files
+        audio_metadata = file.get("audioMediaMetadata", {})
+        if "durationMillis" in audio_metadata:
+            return float(audio_metadata["durationMillis"]) / 1000.0
+
+        # For some files, Drive API doesn't provide duration
         # We could download and parse with mutagen, but that's expensive
         # For now, we'll rely on Drive API metadata when available
         
