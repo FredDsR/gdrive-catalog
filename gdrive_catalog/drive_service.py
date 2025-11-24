@@ -83,8 +83,7 @@ class DriveService:
                     pageToken=page_token,
                     fields=(
                         "nextPageToken, files(id, name, mimeType, size, "
-                        "createdTime, parents, webViewLink, videoMediaMetadata, "
-                        "audioMediaMetadata)"
+                        "createdTime, parents, webViewLink, videoMediaMetadata)"
                     ),
                 )
                 .execute()
@@ -111,8 +110,7 @@ class DriveService:
                     fileId=file_id,
                     fields=(
                         "id, name, mimeType, size, createdTime, "
-                        "parents, webViewLink, videoMediaMetadata, "
-                        "audioMediaMetadata"
+                        "parents, webViewLink, videoMediaMetadata"
                     ),
                 )
                 .execute()
