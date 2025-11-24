@@ -2,10 +2,9 @@
 
 import pickle
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -91,7 +90,7 @@ class DriveService:
 
             return results
         except HttpError as error:
-            raise Exception(f"An error occurred: {error}")
+            raise Exception(f"An error occurred: {error}") from error
 
     def get_file_metadata(self, file_id: str) -> Dict[str, Any]:
         """
@@ -117,7 +116,7 @@ class DriveService:
             )
             return file
         except HttpError as error:
-            raise Exception(f"An error occurred: {error}")
+            raise Exception(f"An error occurred: {error}") from error
 
     def download_file(self, file_id: str) -> bytes:
         """
@@ -133,4 +132,4 @@ class DriveService:
             request = self.service.files().get_media(fileId=file_id)
             return request.execute()
         except HttpError as error:
-            raise Exception(f"An error occurred: {error}")
+            raise Exception(f"An error occurred: {error}") from error

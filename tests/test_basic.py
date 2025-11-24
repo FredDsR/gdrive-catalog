@@ -1,6 +1,5 @@
 """Basic tests for gdrive-catalog package."""
 
-import pytest
 from gdrive_catalog import __version__
 
 

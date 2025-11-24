@@ -96,7 +96,7 @@ def scan(
         console.print(f"[green]Found {len(files)} files[/green]")
 
         # Merge with existing data if updating
-        if update and existing_data:
+        if update:
             # Update existing entries and add new ones
             for file in files:
                 file_id = file["id"]

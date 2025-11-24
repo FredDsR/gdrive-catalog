@@ -34,10 +34,10 @@ uv pip install -e .
 
 ```bash
 # Scan your entire Google Drive
-uv run gdrive-catalog scan
+gdrive-catalog scan
 
 # Or scan a specific folder
-uv run gdrive-catalog scan --folder-id "your-folder-id"
+gdrive-catalog scan --folder-id "your-folder-id"
 ```
 
 On first run, your browser will open to authenticate. Grant read-only access to your Drive.
@@ -50,20 +50,20 @@ Open `catalog.csv` to see your Drive contents with metadata!
 
 ```bash
 # Create a new catalog
-uv run gdrive-catalog scan --output my-catalog.csv
+gdrive-catalog scan --output my-catalog.csv
 
 # Update an existing catalog
-uv run gdrive-catalog scan --output my-catalog.csv --update
+gdrive-catalog scan --output my-catalog.csv --update
 
 # Scan specific folder
-uv run gdrive-catalog scan --folder-id "abc123"
+gdrive-catalog scan --folder-id "abc123"
 
 # Check version
-uv run gdrive-catalog version
+gdrive-catalog version
 
 # Get help
-uv run gdrive-catalog --help
-uv run gdrive-catalog scan --help
+gdrive-catalog --help
+gdrive-catalog scan --help
 ```
 
 ## What's in the CSV?

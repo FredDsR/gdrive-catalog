@@ -1,11 +1,11 @@
 """Scanner for Google Drive files with metadata extraction."""
 
-import io
-from typing import Any, Dict, List, Optional
-
-from mutagen import File as MutagenFile
+import logging
+from typing import Any, Dict, Optional
 
 from gdrive_catalog.drive_service import DriveService
+
+logger = logging.getLogger(__name__)
 
 
 class DriveScanner:
@@ -44,7 +44,7 @@ class DriveScanner:
         self.drive_service = drive_service
         self.folder_cache: Dict[str, Dict[str, Any]] = {}
 
-    def scan_drive(self, folder_id: Optional[str] = None) -> List[Dict[str, Any]]:
+    def scan_drive(self, folder_id: Optional[str] = None) -> list[Dict[str, Any]]:
         """
         Recursively scan Google Drive and collect file metadata.
 
@@ -150,20 +150,6 @@ class DriveScanner:
         if "durationMillis" in audio_metadata:
             return float(audio_metadata["durationMillis"]) / 1000.0
 
-        # For some files, Drive API doesn't provide duration
-        # We could download and parse with mutagen, but that's expensive
-        # For now, we'll rely on Drive API metadata when available
-
-        # Alternative: If we need to be thorough, we can download and analyze
-        # This is commented out as it would be very slow for large collections
-        # try:
-        #     file_content = self.drive_service.download_file(file["id"])
-        #     audio = MutagenFile(io.BytesIO(file_content))
-        #     if audio and hasattr(audio.info, 'length'):
-        #         return audio.info.length
-        # except Exception:
-        #     pass
-
         return None
 
     def _build_file_path(self, file: Dict[str, Any]) -> str:
@@ -222,8 +208,11 @@ class DriveScanner:
                     }
 
                     current_parent = parent_id
-                except Exception:
-                    # If we can't fetch parent, stop here
+                except Exception as e:
+                    # If we can't fetch parent, log and stop here
+                    logger.debug(
+                        "Failed to fetch parent folder %s: %s", current_parent, e
+                    )
                     break
 
             if folder_name:
