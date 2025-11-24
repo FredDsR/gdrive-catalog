@@ -42,7 +42,7 @@ class DriveScanner:
             drive_service: Initialized DriveService instance
         """
         self.drive_service = drive_service
-        self.folder_cache: Dict[str, str] = {}
+        self.folder_cache: Dict[str, Dict[str, Any]] = {}
 
     def scan_drive(self, folder_id: Optional[str] = None) -> List[Dict[str, Any]]:
         """
@@ -115,7 +115,9 @@ class DriveScanner:
             "size_bytes": file.get("size", "0"),
             "duration_seconds": "",
             "path": self._build_file_path(file),
-            "link": file.get("webViewLink", f"https://drive.google.com/file/d/{file_id}/view"),
+            "link": file.get(
+                "webViewLink", f"https://drive.google.com/file/d/{file_id}/view"
+            ),
             "created_at": file.get("createdTime", ""),
             "mime_type": mime_type,
         }
@@ -151,7 +153,7 @@ class DriveScanner:
         # For some files, Drive API doesn't provide duration
         # We could download and parse with mutagen, but that's expensive
         # For now, we'll rely on Drive API metadata when available
-        
+
         # Alternative: If we need to be thorough, we can download and analyze
         # This is commented out as it would be very slow for large collections
         # try:
@@ -182,26 +184,44 @@ class DriveScanner:
         current_parent = parents[0]
 
         # Traverse up the folder hierarchy
-        max_depth = 20  # Prevent infinite loops
+        max_depth = 100  # Prevent infinite loops
         depth = 0
+        visited_folders = set()
+
         while current_parent and depth < max_depth:
             depth += 1
 
+            # Detect circular references
+            if current_parent in visited_folders:
+                break
+            visited_folders.add(current_parent)
+
             # Check cache first
             if current_parent in self.folder_cache:
-                folder_name = self.folder_cache[current_parent]
+                folder_data = self.folder_cache[current_parent]
+                folder_name = folder_data["name"]
+                current_parent = folder_data.get("parent")
             else:
                 # Fetch folder metadata
                 try:
-                    folder = self.drive_service.service.files().get(
-                        fileId=current_parent, fields="name, parents"
-                    ).execute()
+                    folder = (
+                        self.drive_service.service.files()
+                        .get(fileId=current_parent, fields="name, parents")
+                        .execute()
+                    )
                     folder_name = folder.get("name", "")
-                    self.folder_cache[current_parent] = folder_name
 
                     # Get parent's parent
                     folder_parents = folder.get("parents", [])
-                    current_parent = folder_parents[0] if folder_parents else None
+                    parent_id = folder_parents[0] if folder_parents else None
+
+                    # Cache both name and parent
+                    self.folder_cache[current_parent] = {
+                        "name": folder_name,
+                        "parent": parent_id,
+                    }
+
+                    current_parent = parent_id
                 except Exception:
                     # If we can't fetch parent, stop here
                     break
