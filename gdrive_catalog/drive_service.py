@@ -2,7 +2,6 @@
 
 import pickle
 from pathlib import Path
-from typing import Any, Dict, Optional
 
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -54,10 +53,10 @@ class DriveService:
 
     def list_files(
         self,
-        folder_id: Optional[str] = None,
+        folder_id: str | None = None,
         page_size: int = 1000,
-        page_token: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        page_token: str | None = None,
+    ) -> dict[str, any]:
         """
         List files in Google Drive.
 
@@ -92,7 +91,7 @@ class DriveService:
         except HttpError as error:
             raise Exception(f"An error occurred: {error}") from error
 
-    def get_file_metadata(self, file_id: str) -> Dict[str, Any]:
+    def get_file_metadata(self, file_id: str) -> dict[str, any]:
         """
         Get detailed metadata for a specific file.
 

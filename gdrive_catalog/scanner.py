@@ -1,7 +1,6 @@
 """Scanner for Google Drive files with metadata extraction."""
 
 import logging
-from typing import Any, Dict, Optional
 
 from gdrive_catalog.drive_service import DriveService
 
@@ -42,9 +41,9 @@ class DriveScanner:
             drive_service: Initialized DriveService instance
         """
         self.drive_service = drive_service
-        self.folder_cache: Dict[str, Dict[str, Any]] = {}
+        self.folder_cache: dict[str, dict[str, any]] = {}
 
-    def scan_drive(self, folder_id: Optional[str] = None) -> list[Dict[str, Any]]:
+    def scan_drive(self, folder_id: str | None = None) -> list[dict[str, any]]:
         """
         Recursively scan Google Drive and collect file metadata.
 
@@ -95,7 +94,7 @@ class DriveScanner:
 
         return all_files
 
-    def _extract_file_data(self, file: Dict[str, Any]) -> Dict[str, Any]:
+    def _extract_file_data(self, file: dict[str, any]) -> dict[str, any]:
         """
         Extract relevant metadata from a file.
 
@@ -130,7 +129,7 @@ class DriveScanner:
 
         return data
 
-    def _extract_duration(self, file: Dict[str, Any]) -> Optional[float]:
+    def _extract_duration(self, file: dict[str, any]) -> float | None:
         """
         Extract duration from audio/video file metadata.
 
@@ -152,7 +151,7 @@ class DriveScanner:
 
         return None
 
-    def _build_file_path(self, file: Dict[str, Any]) -> str:
+    def _build_file_path(self, file: dict[str, any]) -> str:
         """
         Build the full path of a file within Drive.
 
