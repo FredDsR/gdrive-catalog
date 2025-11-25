@@ -65,6 +65,8 @@ uv pip install -e .
 
 ## Usage
 
+> **Note:** After installing with `uv pip install -e .`, you can run commands directly as `gdrive-catalog`. Alternatively, use `uv run gdrive-catalog` if you haven't installed the package.
+
 ### Basic Usage
 
 Scan your entire Google Drive and create a catalog:

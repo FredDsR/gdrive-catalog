@@ -19,12 +19,14 @@ uv pip install -e .
 
 ## Basic Examples
 
+> **Note:** After installing with `uv pip install -e .`, you can run commands directly as `gdrive-catalog scan`. If you prefer not to install the package, use `uv run gdrive-catalog scan` instead.
+
 ### Example 1: Scan Entire Drive
 
 Scan your entire Google Drive and create a catalog:
 
 ```bash
-uv run gdrive-catalog scan
+gdrive-catalog scan
 ```
 
 This creates `catalog.csv` with all your files.
@@ -34,7 +36,7 @@ This creates `catalog.csv` with all your files.
 Scan only a specific folder (replace `FOLDER_ID` with your folder ID from the URL):
 
 ```bash
-uv run gdrive-catalog scan --folder-id "1a2b3c4d5e6f7g8h9i0j"
+gdrive-catalog scan --folder-id "1a2b3c4d5e6f7g8h9i0j"
 ```
 
 ### Example 3: Custom Output Location
@@ -42,7 +44,7 @@ uv run gdrive-catalog scan --folder-id "1a2b3c4d5e6f7g8h9i0j"
 Save the catalog to a specific location:
 
 ```bash
-uv run gdrive-catalog scan --output reports/drive-catalog-2024.csv
+gdrive-catalog scan --output reports/drive-catalog-2024.csv
 ```
 
 ### Example 4: Update Existing Catalog
@@ -51,10 +53,10 @@ Update an existing catalog with new or modified files:
 
 ```bash
 # First scan
-uv run gdrive-catalog scan --output my-catalog.csv
+gdrive-catalog scan --output my-catalog.csv
 
 # Later, update it
-uv run gdrive-catalog scan --output my-catalog.csv --update
+gdrive-catalog scan --output my-catalog.csv --update
 ```
 
 ### Example 5: Scan with Custom Credentials
@@ -62,7 +64,7 @@ uv run gdrive-catalog scan --output my-catalog.csv --update
 Use credentials from a different location:
 
 ```bash
-uv run gdrive-catalog scan --credentials config/my-credentials.json
+gdrive-catalog scan --credentials config/my-credentials.json
 ```
 
 ### Example 6: Complete Example
@@ -70,7 +72,7 @@ uv run gdrive-catalog scan --credentials config/my-credentials.json
 Scan a specific folder, update existing catalog, with custom paths:
 
 ```bash
-uv run gdrive-catalog scan \
+gdrive-catalog scan \
   --folder-id "1a2b3c4d5e6f7g8h9i0j" \
   --output reports/media-library.csv \
   --update \
