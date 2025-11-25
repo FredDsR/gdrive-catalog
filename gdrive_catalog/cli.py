@@ -20,42 +20,39 @@ console = Console()
 
 @app.command()
 def scan(
-    output: Annotated[
-        Path,
-        typer.Option(
-            "catalog.csv",
-            "--output",
-            "-o",
-            help="Output CSV file path",
-        ),
-    ],
     folder_id: Annotated[
         str | None,
         typer.Option(
-            None,
             "--folder-id",
             "-f",
             help="Google Drive folder ID to scan (scans root if not specified)",
         ),
-    ],
+    ] = None,
     update: Annotated[
         bool,
         typer.Option(
-            False,
             "--update",
             "-u",
+            is_flag=True,
             help="Update existing catalog file instead of creating new one",
         ),
-    ],
+    ] = False,
     credentials: Annotated[
         Path,
         typer.Option(
-            "credentials.json",
             "--credentials",
             "-c",
             help="Path to Google OAuth credentials JSON file",
         ),
-    ],
+    ] = Path("credentials.json"),
+    output: Annotated[
+        Path,
+        typer.Option(
+            "--output",
+            "-o",
+            help="Output CSV file path",
+        ),
+    ] = Path("catalog.csv"),
 ):
     """
     Scan Google Drive and generate a CSV catalog with file metadata.
