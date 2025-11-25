@@ -43,3 +43,15 @@ select = [
 
 [tool.ruff.lint.isort]
 known-first-party = ["gdrive_catalog"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --cov=gdrive_catalog --cov-report=term-missing --cov-fail-under=80"
+
+[tool.coverage.run]
+source = ["gdrive_catalog"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 80
