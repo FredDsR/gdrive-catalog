@@ -97,12 +97,7 @@ def scan(
             # Update existing entries and add new ones
             for file in files:
                 file_id = file["id"]
-                if file_id in existing_data:
-                    # Update existing entry
-                    existing_data[file_id] = file
-                else:
-                    # Add new entry
-                    existing_data[file_id] = file
+                existing_data[file_id] = file
             files = list(existing_data.values())
             console.print(f"[green]Merged catalog contains {len(files)} total entries[/green]")
 
