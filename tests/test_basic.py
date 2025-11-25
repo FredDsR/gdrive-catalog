@@ -13,7 +13,7 @@ def test_imports():
     from gdrive_catalog.cli import app
     from gdrive_catalog.drive_service import DriveService
     from gdrive_catalog.scanner import DriveScanner
-    
+
     assert app is not None
     assert DriveService is not None
     assert DriveScanner is not None

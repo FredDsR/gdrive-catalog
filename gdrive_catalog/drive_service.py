@@ -2,6 +2,7 @@
 
 import pickle
 from pathlib import Path
+from typing import Any
 
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -40,9 +41,7 @@ class DriveService:
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
             else:
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    self.credentials_path, SCOPES
-                )
+                flow = InstalledAppFlow.from_client_secrets_file(self.credentials_path, SCOPES)
                 creds = flow.run_local_server(port=0)
 
             # Save credentials for next time
@@ -56,7 +55,7 @@ class DriveService:
         folder_id: str | None = None,
         page_size: int = 1000,
         page_token: str | None = None,
-    ) -> dict[str, any]:
+    ) -> dict[str, Any]:
         """
         List files in Google Drive.
 
@@ -91,7 +90,7 @@ class DriveService:
         except HttpError as error:
             raise Exception(f"An error occurred: {error}") from error
 
-    def get_file_metadata(self, file_id: str) -> dict[str, any]:
+    def get_file_metadata(self, file_id: str) -> dict[str, Any]:
         """
         Get detailed metadata for a specific file.
 

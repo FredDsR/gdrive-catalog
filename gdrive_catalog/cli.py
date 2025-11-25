@@ -2,7 +2,6 @@
 
 import csv
 from pathlib import Path
-from typing import Optional
 
 import typer
 from rich.console import Console
@@ -26,7 +25,7 @@ def scan(
         "-o",
         help="Output CSV file path",
     ),
-    folder_id: Optional[str] = typer.Option(
+    folder_id: str | None = typer.Option(
         None,
         "--folder-id",
         "-f",
@@ -54,9 +53,7 @@ def scan(
     try:
         # Check if credentials file exists
         if not credentials.exists():
-            console.print(
-                f"[red]Error: Credentials file not found at {credentials}[/red]"
-            )
+            console.print(f"[red]Error: Credentials file not found at {credentials}[/red]")
             console.print(
                 "\n[yellow]To use this tool, you need to:[/yellow]\n"
                 "1. Create a project in Google Cloud Console\n"
@@ -76,13 +73,11 @@ def scan(
         existing_data = {}
         if update and output.exists():
             console.print(f"[cyan]Loading existing catalog from {output}...[/cyan]")
-            with open(output, "r", encoding="utf-8") as f:
+            with open(output, encoding="utf-8") as f:
                 reader = csv.DictReader(f)
                 for row in reader:
                     existing_data[row["id"]] = row
-            console.print(
-                f"[green]Loaded {len(existing_data)} existing entries[/green]"
-            )
+            console.print(f"[green]Loaded {len(existing_data)} existing entries[/green]")
 
         # Scan Drive
         console.print("[cyan]Scanning Google Drive...[/cyan]")
@@ -109,9 +104,7 @@ def scan(
                     # Add new entry
                     existing_data[file_id] = file
             files = list(existing_data.values())
-            console.print(
-                f"[green]Merged catalog contains {len(files)} total entries[/green]"
-            )
+            console.print(f"[green]Merged catalog contains {len(files)} total entries[/green]")
 
         # Write to CSV
         console.print(f"[cyan]Writing catalog to {output}...[/cyan]")

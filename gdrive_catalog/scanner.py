@@ -1,6 +1,7 @@
 """Scanner for Google Drive files with metadata extraction."""
 
 import logging
+from typing import Any
 
 from gdrive_catalog.drive_service import DriveService
 
@@ -41,9 +42,9 @@ class DriveScanner:
             drive_service: Initialized DriveService instance
         """
         self.drive_service = drive_service
-        self.folder_cache: dict[str, dict[str, any]] = {}
+        self.folder_cache: dict[str, dict[str, Any]] = {}
 
-    def scan_drive(self, folder_id: str | None = None) -> list[dict[str, any]]:
+    def scan_drive(self, folder_id: str | None = None) -> list[dict[str, Any]]:
         """
         Recursively scan Google Drive and collect file metadata.
 
@@ -94,7 +95,7 @@ class DriveScanner:
 
         return all_files
 
-    def _extract_file_data(self, file: dict[str, any]) -> dict[str, any]:
+    def _extract_file_data(self, file: dict[str, Any]) -> dict[str, Any]:
         """
         Extract relevant metadata from a file.
 
@@ -114,9 +115,7 @@ class DriveScanner:
             "size_bytes": file.get("size", "0"),
             "duration_milliseconds": "",
             "path": self._build_file_path(file),
-            "link": file.get(
-                "webViewLink", f"https://drive.google.com/file/d/{file_id}/view"
-            ),
+            "link": file.get("webViewLink", f"https://drive.google.com/file/d/{file_id}/view"),
             "created_at": file.get("createdTime", ""),
             "mime_type": mime_type,
         }
@@ -129,7 +128,7 @@ class DriveScanner:
 
         return data
 
-    def _extract_duration(self, file: dict[str, any]) -> int | None:
+    def _extract_duration(self, file: dict[str, Any]) -> int | None:
         """
         Extract duration from audio/video file metadata.
 
@@ -146,7 +145,7 @@ class DriveScanner:
 
         return None
 
-    def _build_file_path(self, file: dict[str, any]) -> str:
+    def _build_file_path(self, file: dict[str, Any]) -> str:
         """
         Build the full path of a file within Drive.
 
@@ -204,9 +203,7 @@ class DriveScanner:
                     current_parent = parent_id
                 except Exception as e:
                     # If we can't fetch parent, log and stop here
-                    logger.debug(
-                        "Failed to fetch parent folder %s: %s", current_parent, e
-                    )
+                    logger.debug("Failed to fetch parent folder %s: %s", current_parent, e)
                     break
 
             if folder_name:
