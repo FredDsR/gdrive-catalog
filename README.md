@@ -6,7 +6,7 @@ A CLI tool to scan Google Drive storage and create CSV catalogs with comprehensi
 
 - 📁 Scan entire Google Drive or specific folders
 - 📊 Export metadata to CSV format
-- 🎵 Extract duration for audio and video files
+- 🎵 Extract duration for video files
 - 🔄 Update existing catalogs with new files
 - 📝 Capture file metadata: name, size, duration, path, link, created_at
 - 🚀 Built with Typer for an excellent CLI experience
@@ -208,5 +208,5 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 - Built with [Typer](https://typer.tiangolo.com/) for the CLI interface
 - Uses [Google Drive API](https://developers.google.com/drive) for file access
-- Uses [Mutagen](https://mutagen.readthedocs.io/) for audio metadata extraction
+
 - Managed with [uv](https://github.com/astral-sh/uv) package manager

@@ -43,7 +43,7 @@ pyproject.toml         # Dependencies and config
 ## Google Drive API guidelines
 
 - Credentials in `credentials.json` (never commit)
-- OAuth generates `token.json` (keep local)
+- OAuth generates `token.pickle` (keep local)
 - Handle API rate limits gracefully
 - Use `drive_service.py` for all Drive API interactions
 - Implement retry logic for transient failures
@@ -118,7 +118,7 @@ Use descriptive branch names with conventional prefixes:
 
 ## Security notes
 
-- Never commit credentials (`credentials.json`) or tokens (`token.json`)
+- Never commit credentials (`credentials.json`) or tokens (`token.pickle`)
 - Validate and sanitize user input
 - Use environment variables for sensitive configuration
 - Follow principle of least privilege for API scopes

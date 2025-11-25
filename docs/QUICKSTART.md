@@ -71,7 +71,7 @@ gdrive-catalog scan --help
 - **id**: Unique file identifier
 - **name**: File name
 - **size_bytes**: File size in bytes
-- **duration_milliseconds**: Duration for audio/video (if available)
+- **duration_milliseconds**: Duration for video (if available)
 - **path**: Full path within Drive
 - **link**: Direct link to open the file
 - **created_at**: When the file was created
