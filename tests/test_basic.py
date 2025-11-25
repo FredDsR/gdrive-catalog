@@ -12,8 +12,18 @@ def test_imports():
     """Test that main modules can be imported."""
     from gdrive_catalog.cli import app
     from gdrive_catalog.drive_service import DriveService
+    from gdrive_catalog.exceptions import (
+        DriveServiceError,
+        FileDownloadError,
+        FileListError,
+        FileMetadataError,
+    )
     from gdrive_catalog.scanner import DriveScanner
 
     assert app is not None
     assert DriveService is not None
     assert DriveScanner is not None
+    assert DriveServiceError is not None
+    assert FileListError is not None
+    assert FileMetadataError is not None
+    assert FileDownloadError is not None

@@ -9,6 +9,8 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
+from gdrive_catalog.exceptions import FileDownloadError, FileListError, FileMetadataError
+
 # If modifying these scopes, delete the token.pickle file.
 SCOPES = ["https://www.googleapis.com/auth/drive.readonly"]
 
@@ -88,7 +90,11 @@ class DriveService:
 
             return results
         except HttpError as error:
-            raise Exception(f"An error occurred: {error}") from error
+            raise FileListError(
+                message=str(error),
+                folder_id=folder_id,
+                original_error=error,
+            ) from error
 
     def get_file_metadata(self, file_id: str) -> dict[str, Any]:
         """
@@ -114,7 +120,11 @@ class DriveService:
             )
             return file
         except HttpError as error:
-            raise Exception(f"An error occurred: {error}") from error
+            raise FileMetadataError(
+                message=str(error),
+                file_id=file_id,
+                original_error=error,
+            ) from error
 
     def download_file(self, file_id: str) -> bytes:
         """
@@ -130,4 +140,8 @@ class DriveService:
             request = self.service.files().get_media(fileId=file_id)
             return request.execute()
         except HttpError as error:
-            raise Exception(f"An error occurred: {error}") from error
+            raise FileDownloadError(
+                message=str(error),
+                file_id=file_id,
+                original_error=error,
+            ) from error
