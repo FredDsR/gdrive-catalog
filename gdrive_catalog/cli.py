@@ -2,6 +2,7 @@
 
 import csv
 from pathlib import Path
+from typing import Annotated
 
 import typer
 from rich.console import Console
@@ -19,30 +20,42 @@ console = Console()
 
 @app.command()
 def scan(
-    output: Path = typer.Option(
-        "catalog.csv",
-        "--output",
-        "-o",
-        help="Output CSV file path",
-    ),
-    folder_id: str | None = typer.Option(
-        None,
-        "--folder-id",
-        "-f",
-        help="Google Drive folder ID to scan (scans root if not specified)",
-    ),
-    update: bool = typer.Option(
-        False,
-        "--update",
-        "-u",
-        help="Update existing catalog file instead of creating new one",
-    ),
-    credentials: Path = typer.Option(
-        "credentials.json",
-        "--credentials",
-        "-c",
-        help="Path to Google OAuth credentials JSON file",
-    ),
+    output: Annotated[
+        Path,
+        typer.Option(
+            "catalog.csv",
+            "--output",
+            "-o",
+            help="Output CSV file path",
+        ),
+    ],
+    folder_id: Annotated[
+        str | None,
+        typer.Option(
+            None,
+            "--folder-id",
+            "-f",
+            help="Google Drive folder ID to scan (scans root if not specified)",
+        ),
+    ],
+    update: Annotated[
+        bool,
+        typer.Option(
+            False,
+            "--update",
+            "-u",
+            help="Update existing catalog file instead of creating new one",
+        ),
+    ],
+    credentials: Annotated[
+        Path,
+        typer.Option(
+            "credentials.json",
+            "--credentials",
+            "-c",
+            help="Path to Google OAuth credentials JSON file",
+        ),
+    ],
 ):
     """
     Scan Google Drive and generate a CSV catalog with file metadata.
@@ -125,10 +138,10 @@ def scan(
 
     except KeyboardInterrupt:
         console.print("\n[yellow]Scan interrupted by user[/yellow]")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from None
     except Exception as e:
         console.print(f"[red]Error: {e}[/red]")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
 
 @app.command()
