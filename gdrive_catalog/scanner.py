@@ -112,7 +112,7 @@ class DriveScanner:
             "id": file_id,
             "name": file.get("name", ""),
             "size_bytes": file.get("size", "0"),
-            "duration_seconds": "",
+            "duration_milliseconds": "",
             "path": self._build_file_path(file),
             "link": file.get(
                 "webViewLink", f"https://drive.google.com/file/d/{file_id}/view"
@@ -125,11 +125,11 @@ class DriveScanner:
         if mime_type in self.AUDIO_MIME_TYPES or mime_type in self.VIDEO_MIME_TYPES:
             duration = self._extract_duration(file)
             if duration:
-                data["duration_seconds"] = str(duration)
+                data["duration_milliseconds"] = str(duration)
 
         return data
 
-    def _extract_duration(self, file: dict[str, any]) -> float | None:
+    def _extract_duration(self, file: dict[str, any]) -> int | None:
         """
         Extract duration from audio/video file metadata.
 
@@ -137,17 +137,12 @@ class DriveScanner:
             file: File metadata from Drive API
 
         Returns:
-            Duration in seconds, or None if not available
+            Duration in milliseconds, or None if not available
         """
         # Try to get duration from Drive API metadata for video files
         video_metadata = file.get("videoMediaMetadata", {})
         if "durationMillis" in video_metadata:
-            return float(video_metadata["durationMillis"]) / 1000.0
-
-        # Try to get duration from Drive API metadata for audio files
-        audio_metadata = file.get("audioMediaMetadata", {})
-        if "durationMillis" in audio_metadata:
-            return float(audio_metadata["durationMillis"]) / 1000.0
+            return int(video_metadata["durationMillis"])
 
         return None
 

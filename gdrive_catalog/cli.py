@@ -47,8 +47,8 @@ def scan(
 ):
     """
     Scan Google Drive and generate a CSV catalog with file metadata.
-    
-    The catalog includes: name, size (bytes), duration (for audio/video), 
+
+    The catalog includes: name, size (bytes), duration (for video),
     path, link, and created_at timestamp.
     """
     try:
@@ -80,7 +80,9 @@ def scan(
                 reader = csv.DictReader(f)
                 for row in reader:
                     existing_data[row["id"]] = row
-            console.print(f"[green]Loaded {len(existing_data)} existing entries[/green]")
+            console.print(
+                f"[green]Loaded {len(existing_data)} existing entries[/green]"
+            )
 
         # Scan Drive
         console.print("[cyan]Scanning Google Drive...[/cyan]")
@@ -114,13 +116,13 @@ def scan(
         # Write to CSV
         console.print(f"[cyan]Writing catalog to {output}...[/cyan]")
         output.parent.mkdir(parents=True, exist_ok=True)
-        
+
         with open(output, "w", newline="", encoding="utf-8") as f:
             fieldnames = [
                 "id",
                 "name",
                 "size_bytes",
-                "duration_seconds",
+                "duration_milliseconds",
                 "path",
                 "link",
                 "created_at",
@@ -145,6 +147,7 @@ def scan(
 def version():
     """Show version information."""
     from gdrive_catalog import __version__
+
     console.print(f"gdrive-catalog version {__version__}")
 
 

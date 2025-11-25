@@ -82,7 +82,7 @@ uv run gdrive-catalog scan \
 The generated CSV will look like this:
 
 ```csv
-id,name,size_bytes,duration_seconds,path,link,created_at,mime_type
+id,name,size_bytes,duration_milliseconds,path,link,created_at,mime_type
 abc123,video.mp4,52428800,120.5,/Videos/video.mp4,https://drive.google.com/...,2024-01-15T10:30:00.000Z,video/mp4
 def456,audio.mp3,5242880,180.2,/Music/audio.mp3,https://drive.google.com/...,2024-01-16T14:20:00.000Z,audio/mpeg
 ghi789,document.pdf,1048576,,/Documents/document.pdf,https://drive.google.com/...,2024-01-17T09:15:00.000Z,application/pdf

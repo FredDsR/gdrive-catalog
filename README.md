@@ -18,7 +18,7 @@ For each file, the tool captures:
 - **id**: Google Drive file ID
 - **name**: File name
 - **size_bytes**: File size in bytes
-- **duration_seconds**: Duration for audio/video files (when available)
+- **duration_milliseconds**: Duration for audio/video files (when available)
 - **path**: Full path within Google Drive
 - **link**: Direct link for easy access
 - **created_at**: File creation timestamp
@@ -151,7 +151,7 @@ The generated CSV file contains the following columns:
 | id | Google Drive file ID |
 | name | File name |
 | size_bytes | File size in bytes |
-| duration_seconds | Duration in seconds (for audio/video files) |
+| duration_milliseconds | Duration in milliseconds (for audio/video files) |
 | path | Full path within Google Drive structure |
 | link | Direct Google Drive link for easy access |
 | created_at | ISO 8601 timestamp of file creation |
