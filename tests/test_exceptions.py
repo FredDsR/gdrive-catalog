@@ -52,9 +52,8 @@ class TestDriveServiceError:
 
     def test_can_be_raised_and_caught(self):
         """Test that exception can be raised and caught properly."""
-        with pytest.raises(DriveServiceError) as exc_info:
+        with pytest.raises(DriveServiceError, match=r"Failed to test: Test error"):
             raise DriveServiceError("Test error", operation="test")
-        assert "Failed to test: Test error" in str(exc_info.value)
 
 
 class TestFileListError:
