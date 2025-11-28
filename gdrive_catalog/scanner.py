@@ -78,12 +78,12 @@ class DriveScanner:
 
                     # If it's a folder, add to scanning queue and cache its metadata
                     if mime_type == "application/vnd.google-apps.folder":
-                        folder_id = file.get("id")
-                        if folder_id:
-                            folders_to_scan.append(folder_id)
+                        child_folder_id = file.get("id")
+                        if child_folder_id:
+                            folders_to_scan.append(child_folder_id)
                             # Pre-populate folder cache to avoid N+1 API calls when building paths
                             folder_parents = file.get("parents", [])
-                            self.folder_cache[folder_id] = {
+                            self.folder_cache[child_folder_id] = {
                                 "name": file.get("name", ""),
                                 "parent": folder_parents[0] if folder_parents else None,
                             }
