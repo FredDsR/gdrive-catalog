@@ -143,3 +143,49 @@ class FileDownloadError(DriveServiceError):
         self.file_id = file_id
         operation = f"download file '{file_id}'"
         super().__init__(message, operation=operation, original_error=original_error)
+
+
+class CSVValidationError(Exception):
+    """
+    Exception raised when CSV file validation fails.
+
+    This exception is raised when a CSV file does not match the expected
+    catalog schema. It provides detailed information about what validation
+    failed to help users fix their CSV files.
+
+    Attributes:
+        message: Human-readable description of the validation failure.
+        file_path: Path to the CSV file that failed validation.
+        missing_columns: Set of required columns that are missing from the CSV.
+        actual_columns: Set of columns found in the CSV file.
+    """
+
+    def __init__(
+        self,
+        message: str,
+        file_path: str | None = None,
+        missing_columns: set[str] | None = None,
+        actual_columns: set[str] | None = None,
+    ):
+        """
+        Initialize the CSVValidationError.
+
+        Args:
+            message: Human-readable description of the validation failure.
+            file_path: Path to the CSV file that failed validation.
+            missing_columns: Set of required columns missing from the CSV.
+            actual_columns: Set of columns found in the CSV file.
+        """
+        self.message = message
+        self.file_path = file_path
+        self.missing_columns = missing_columns or set()
+        self.actual_columns = actual_columns or set()
+
+        # Build a descriptive error message
+        full_message = message
+        if file_path:
+            full_message = f"Invalid CSV file '{file_path}': {message}"
+        if missing_columns:
+            full_message = f"{full_message}. Missing columns: {sorted(missing_columns)}"
+
+        super().__init__(full_message)

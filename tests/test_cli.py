@@ -393,3 +393,137 @@ class TestAppConfiguration:
         result = runner.invoke(app, ["--help"])
         assert "scan" in result.stdout
         assert "version" in result.stdout
+
+
+class TestScanCSVValidation:
+    """Tests for CSV validation in the scan command."""
+
+    @patch("gdrive_catalog.cli.DriveScanner")
+    @patch("gdrive_catalog.cli.DriveService")
+    def test_scan_update_rejects_csv_missing_id_column(
+        self, mock_drive_service_class, mock_scanner_class, tmp_path
+    ):
+        """Test scan with --update rejects CSV file missing 'id' column."""
+        creds_file = tmp_path / "credentials.json"
+        creds_file.write_text("{}")
+
+        output_file = tmp_path / "invalid.csv"
+
+        # Create invalid CSV without 'id' column
+        with open(output_file, "w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=["name", "size_bytes", "path"])
+            writer.writeheader()
+            writer.writerow({"name": "test.pdf", "size_bytes": "1024", "path": "/test.pdf"})
+
+        result = runner.invoke(
+            app,
+            [
+                "scan",
+                "--credentials",
+                str(creds_file),
+                "--output",
+                str(output_file),
+                "--update",
+            ],
+        )
+
+        assert result.exit_code == 1
+        assert "Error" in result.stdout
+        assert "missing required columns" in result.stdout.lower() or "id" in result.stdout.lower()
+
+    @patch("gdrive_catalog.cli.DriveScanner")
+    @patch("gdrive_catalog.cli.DriveService")
+    def test_scan_update_rejects_empty_csv(
+        self, mock_drive_service_class, mock_scanner_class, tmp_path
+    ):
+        """Test scan with --update rejects completely empty CSV file."""
+        creds_file = tmp_path / "credentials.json"
+        creds_file.write_text("{}")
+
+        output_file = tmp_path / "empty.csv"
+        output_file.write_text("")
+
+        result = runner.invoke(
+            app,
+            [
+                "scan",
+                "--credentials",
+                str(creds_file),
+                "--output",
+                str(output_file),
+                "--update",
+            ],
+        )
+
+        assert result.exit_code == 1
+        assert "Error" in result.stdout
+
+    @patch("gdrive_catalog.cli.DriveScanner")
+    @patch("gdrive_catalog.cli.DriveService")
+    def test_scan_update_shows_helpful_message_for_invalid_csv(
+        self, mock_drive_service_class, mock_scanner_class, tmp_path
+    ):
+        """Test that helpful guidance is shown when CSV validation fails."""
+        creds_file = tmp_path / "credentials.json"
+        creds_file.write_text("{}")
+
+        output_file = tmp_path / "invalid.csv"
+
+        # Create invalid CSV
+        with open(output_file, "w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=["name", "size_bytes"])
+            writer.writeheader()
+            writer.writerow({"name": "test.pdf", "size_bytes": "1024"})
+
+        result = runner.invoke(
+            app,
+            [
+                "scan",
+                "--credentials",
+                str(creds_file),
+                "--output",
+                str(output_file),
+                "--update",
+            ],
+        )
+
+        assert result.exit_code == 1
+        # Should show helpful options to the user
+        assert "invalid format" in result.stdout.lower() or "options" in result.stdout.lower()
+
+    @patch("gdrive_catalog.cli.DriveScanner")
+    @patch("gdrive_catalog.cli.DriveService")
+    def test_scan_update_accepts_valid_csv_with_only_id(
+        self, mock_drive_service_class, mock_scanner_class, tmp_path
+    ):
+        """Test scan with --update accepts CSV with at least 'id' column."""
+        creds_file = tmp_path / "credentials.json"
+        creds_file.write_text("{}")
+
+        output_file = tmp_path / "minimal.csv"
+
+        # Create valid CSV with only 'id' column
+        with open(output_file, "w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=["id"])
+            writer.writeheader()
+            writer.writerow({"id": "file1"})
+
+        mock_scanner = MagicMock()
+        mock_scanner.scan_drive.return_value = []
+        mock_scanner_class.return_value = mock_scanner
+
+        result = runner.invoke(
+            app,
+            [
+                "scan",
+                "--credentials",
+                str(creds_file),
+                "--output",
+                str(output_file),
+                "--update",
+            ],
+        )
+
+        assert result.exit_code == 0
+        # Should show that existing entries were loaded
+        assert "1 existing entries" in result.stdout

@@ -8,7 +8,9 @@ import typer
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
+from gdrive_catalog.csv_validator import CATALOG_FIELDNAMES, load_catalog_csv
 from gdrive_catalog.drive_service import DriveService
+from gdrive_catalog.exceptions import CSVValidationError
 from gdrive_catalog.scanner import DriveScanner
 
 app = typer.Typer(
@@ -83,10 +85,20 @@ def scan(
         existing_data = {}
         if update and output.exists():
             console.print(f"[cyan]Loading existing catalog from {output}...[/cyan]")
-            with open(output, encoding="utf-8") as f:
-                reader = csv.DictReader(f)
-                for row in reader:
-                    existing_data[row["id"]] = row
+            try:
+                existing_data = load_catalog_csv(output)
+            except CSVValidationError as e:
+                console.print(f"[red]Error: {e}[/red]")
+                console.print(
+                    "\n[yellow]The existing catalog file has an invalid format.[/yellow]\n"
+                    "Expected columns: id, name, size_bytes, duration_milliseconds, "
+                    "path, link, created_at, mime_type\n"
+                    "\n[yellow]Options:[/yellow]\n"
+                    "1. Fix the CSV file to include the required 'id' column\n"
+                    "2. Remove the existing file and run scan without --update\n"
+                    "3. Specify a different output file with --output\n"
+                )
+                raise typer.Exit(1) from None
             console.print(f"[green]Loaded {len(existing_data)} existing entries[/green]")
 
         # Scan Drive
@@ -116,17 +128,7 @@ def scan(
         output.parent.mkdir(parents=True, exist_ok=True)
 
         with open(output, "w", newline="", encoding="utf-8") as f:
-            fieldnames = [
-                "id",
-                "name",
-                "size_bytes",
-                "duration_milliseconds",
-                "path",
-                "link",
-                "created_at",
-                "mime_type",
-            ]
-            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer = csv.DictWriter(f, fieldnames=CATALOG_FIELDNAMES)
             writer.writeheader()
             writer.writerows(files)
 
