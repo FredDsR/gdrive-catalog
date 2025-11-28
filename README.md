@@ -1,5 +1,7 @@
 # gdrive-catalog
 
+[![Tests](https://github.com/FredDsR/gdrive-catalog/actions/workflows/run-pytest.yml/badge.svg)](https://github.com/FredDsR/gdrive-catalog/actions/workflows/run-pytest.yml)
+
 A CLI tool to scan Google Drive storage and create CSV catalogs with comprehensive file metadata.
 
 ## Features
@@ -179,6 +181,63 @@ gdrive-catalog/
 ├── main.py               # Entry point
 ├── pyproject.toml        # Project configuration
 └── README.md            # Documentation
+```
+
+## Testing
+
+### Running Tests
+
+Run the test suite with coverage reporting:
+
+```bash
+uv run pytest
+```
+
+This will automatically run tests with coverage due to configuration in `pyproject.toml`.
+
+### Test Options
+
+```bash
+# Run tests with verbose output
+uv run pytest -v
+
+# Run a specific test file
+uv run pytest tests/test_scanner.py
+
+# Run tests without coverage
+uv run pytest tests/ --no-cov
+```
+
+### Coverage Requirements
+
+The project requires a minimum of **80% code coverage**. Tests will fail if coverage drops below this threshold.
+
+To generate an HTML coverage report:
+
+```bash
+uv run pytest --cov-report=html
+# Open htmlcov/index.html in your browser
+```
+
+### Testing Patterns
+
+The test suite follows these conventions:
+
+- **Test Organization**: Tests are organized into classes by feature area (e.g., `TestScanDrive`, `TestExtractDuration`)
+- **Naming**: Test methods use `test_<what_is_being_tested>_<expected_behavior>` naming
+- **Mocking**: External services (Google Drive API) are mocked using `unittest.mock`
+- **Fixtures**: pytest fixtures are used for common test setup
+- **Assertions**: Tests use clear, single-purpose assertions
+
+### Test Structure
+
+```
+tests/
+├── test_basic.py          # Basic import and version tests
+├── test_cli.py            # CLI command tests
+├── test_drive_service.py  # Google Drive API wrapper tests
+├── test_exceptions.py     # Custom exception tests
+└── test_scanner.py        # File scanning logic tests
 ```
 
 ## Troubleshooting

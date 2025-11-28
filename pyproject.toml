@@ -22,6 +22,7 @@ build-backend = "hatchling.build"
 [dependency-groups]
 dev = [
     "pytest>=9.0.1",
+    "pytest-cov>=7.0.0",
     "ruff>=0.8.0",
 ]
 
@@ -42,3 +43,15 @@ select = [
 
 [tool.ruff.lint.isort]
 known-first-party = ["gdrive_catalog"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --cov=gdrive_catalog --cov-report=term-missing --cov-fail-under=80"
+
+[tool.coverage.run]
+source = ["gdrive_catalog"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 80
