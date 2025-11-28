@@ -4,6 +4,30 @@
 
 A CLI tool to scan Google Drive storage and create CSV catalogs with comprehensive file metadata.
 
+## Documentation
+
+### Quick Links
+
+- [Quick Start Guide](docs/QUICKSTART.md) - Get started in minutes
+- [Usage Examples](docs/EXAMPLES.md) - Real-world usage scenarios
+
+### README Sections
+
+- [Features](#features)
+- [Metadata Captured](#metadata-captured)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Setup Google Drive API](#setup-google-drive-api)
+- [Usage](#usage)
+- [First Run Authentication](#first-run-authentication)
+- [CSV Output Format](#csv-output-format)
+- [Development](#development)
+- [Testing](#testing)
+- [Troubleshooting](#troubleshooting)
+- [Security Notes](#security-notes)
+- [License](#license)
+- [Contributing](#contributing)
+
 ## Features
 
 - 📁 Scan entire Google Drive or specific folders
