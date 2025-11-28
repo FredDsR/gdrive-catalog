@@ -3,6 +3,7 @@
 __version__ = "0.1.0"
 
 from gdrive_catalog.exceptions import (
+    CSVValidationError,
     DriveServiceError,
     FileDownloadError,
     FileListError,
@@ -11,6 +12,7 @@ from gdrive_catalog.exceptions import (
 
 __all__ = [
     "__version__",
+    "CSVValidationError",
     "DriveServiceError",
     "FileDownloadError",
     "FileListError",
