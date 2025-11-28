@@ -478,3 +478,103 @@ class TestScanDrive:
 
         # Should only call list_files twice (root + subfolder)
         assert mock_drive_service.list_files.call_count == 2
+
+    def test_scan_drive_caches_folder_metadata(self):
+        """Test that folder metadata is cached during scanning to avoid N+1 API calls."""
+        mock_drive_service = MagicMock()
+
+        # Simulating a nested folder structure: root -> parent_folder -> child_folder
+        mock_drive_service.list_files.side_effect = [
+            # Root level: contains parent_folder
+            {
+                "files": [
+                    {
+                        "id": "parent_folder",
+                        "name": "Parent",
+                        "mimeType": "application/vnd.google-apps.folder",
+                        "parents": ["root_id"],
+                    },
+                ],
+                "nextPageToken": None,
+            },
+            # parent_folder level: contains child_folder
+            {
+                "files": [
+                    {
+                        "id": "child_folder",
+                        "name": "Child",
+                        "mimeType": "application/vnd.google-apps.folder",
+                        "parents": ["parent_folder"],
+                    },
+                ],
+                "nextPageToken": None,
+            },
+            # child_folder level: empty
+            {
+                "files": [],
+                "nextPageToken": None,
+            },
+        ]
+
+        scanner = DriveScanner(mock_drive_service)
+        scanner.scan_drive()
+
+        # Verify folder metadata was cached during scanning
+        assert "parent_folder" in scanner.folder_cache
+        assert "child_folder" in scanner.folder_cache
+        assert scanner.folder_cache["parent_folder"]["name"] == "Parent"
+        assert scanner.folder_cache["parent_folder"]["parent"] == "root_id"
+        assert scanner.folder_cache["child_folder"]["name"] == "Child"
+        assert scanner.folder_cache["child_folder"]["parent"] == "parent_folder"
+
+    def test_scan_drive_uses_cached_folders_for_paths(self):
+        """Test that cached folder metadata is used when building file paths."""
+        mock_drive_service = MagicMock()
+
+        # Simulate scanning a folder structure with files
+        mock_drive_service.list_files.side_effect = [
+            # Root level: contains parent_folder
+            {
+                "files": [
+                    {
+                        "id": "parent_folder",
+                        "name": "Documents",
+                        "mimeType": "application/vnd.google-apps.folder",
+                        "parents": ["root_id"],
+                    },
+                ],
+                "nextPageToken": None,
+            },
+            # parent_folder level: contains a file
+            {
+                "files": [
+                    {
+                        "id": "file1",
+                        "name": "report.pdf",
+                        "mimeType": "application/pdf",
+                        "size": "1024",
+                        "parents": ["parent_folder"],
+                    },
+                ],
+                "nextPageToken": None,
+            },
+        ]
+
+        # Mock the API for fetching root folder (for path building)
+        mock_drive_service.service.files().get().execute.return_value = {
+            "name": "My Drive",
+            "parents": [],
+        }
+
+        scanner = DriveScanner(mock_drive_service)
+        result = scanner.scan_drive()
+
+        # Verify the file was found
+        assert len(result) == 1
+        assert result[0]["name"] == "report.pdf"
+
+        # The path should contain the folder name from cache
+        assert "Documents" in result[0]["path"]
+
+        # Verify that parent_folder was cached (reducing API calls)
+        assert "parent_folder" in scanner.folder_cache

@@ -76,9 +76,16 @@ class DriveScanner:
                 for file in results.get("files", []):
                     mime_type = file.get("mimeType", "")
 
-                    # If it's a folder, add to scanning queue
+                    # If it's a folder, add to scanning queue and cache its metadata
                     if mime_type == "application/vnd.google-apps.folder":
-                        folders_to_scan.append(file["id"])
+                        folder_id = file["id"]
+                        folders_to_scan.append(folder_id)
+                        # Pre-populate folder cache to avoid N+1 API calls when building paths
+                        folder_parents = file.get("parents", [])
+                        self.folder_cache[folder_id] = {
+                            "name": file.get("name", ""),
+                            "parent": folder_parents[0] if folder_parents else None,
+                        }
                         continue
 
                     # Skip Google Workspace files (Docs, Sheets, etc.)
