@@ -91,8 +91,7 @@ def scan(
                 console.print(f"[red]Error: {e}[/red]")
                 console.print(
                     "\n[yellow]The existing catalog file has an invalid format.[/yellow]\n"
-                    "Expected columns: id, name, size_bytes, duration_milliseconds, "
-                    "path, link, created_at, mime_type\n"
+                    f"Expected columns: {', '.join(CATALOG_FIELDNAMES)}\n"
                     "\n[yellow]Options:[/yellow]\n"
                     "1. Fix the CSV file to include the required 'id' column\n"
                     "2. Remove the existing file and run scan without --update\n"

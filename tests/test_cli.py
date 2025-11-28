@@ -429,7 +429,8 @@ class TestScanCSVValidation:
 
         assert result.exit_code == 1
         assert "Error" in result.stdout
-        assert "missing required columns" in result.stdout.lower() or "id" in result.stdout.lower()
+        assert "missing required columns" in result.stdout.lower()
+        assert "id" in result.stdout.lower()
 
     @patch("gdrive_catalog.cli.DriveScanner")
     @patch("gdrive_catalog.cli.DriveService")
@@ -489,7 +490,8 @@ class TestScanCSVValidation:
 
         assert result.exit_code == 1
         # Should show helpful options to the user
-        assert "invalid format" in result.stdout.lower() or "options" in result.stdout.lower()
+        assert "invalid format" in result.stdout.lower()
+        assert "options" in result.stdout.lower()
 
     @patch("gdrive_catalog.cli.DriveScanner")
     @patch("gdrive_catalog.cli.DriveService")

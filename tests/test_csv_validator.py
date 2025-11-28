@@ -305,7 +305,7 @@ class TestCSVValidationErrorAttributes:
     def test_error_message_includes_missing_columns(self):
         """Test that error message includes missing columns when provided."""
         error = CSVValidationError("Missing columns", missing_columns={"id", "name"})
-        assert "['id', 'name']" in str(error) or "['name', 'id']" in str(error)
+        assert "['id', 'name']" in str(error)
 
     def test_error_inheritance(self):
         """Test that CSVValidationError inherits from Exception."""
