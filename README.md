@@ -263,11 +263,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to submit a Issue or a Pull Request.
 
 ## Acknowledgments
 
 - Built with [Typer](https://typer.tiangolo.com/) for the CLI interface
 - Uses [Google Drive API](https://developers.google.com/drive) for file access
-
 - Managed with [uv](https://github.com/astral-sh/uv) package manager
+
+## AI Notice
+
+- Comprehensively uses [Copilot](https://github.com/features/copilot) as coding agent for development, reviewing and documentation process.
