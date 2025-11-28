@@ -578,3 +578,33 @@ class TestScanDrive:
 
         # Verify that parent_folder was cached (reducing API calls)
         assert "parent_folder" in scanner.folder_cache
+
+    def test_scan_drive_handles_folder_without_id(self):
+        """Test that scanning handles folders without an id gracefully."""
+        mock_drive_service = MagicMock()
+
+        # Returns a folder without 'id' field (edge case)
+        mock_drive_service.list_files.return_value = {
+            "files": [
+                {
+                    "name": "FolderWithoutId",
+                    "mimeType": "application/vnd.google-apps.folder",
+                },
+                {
+                    "id": "file1",
+                    "name": "document.pdf",
+                    "mimeType": "application/pdf",
+                    "size": "1024",
+                },
+            ],
+            "nextPageToken": None,
+        }
+
+        scanner = DriveScanner(mock_drive_service)
+        result = scanner.scan_drive()
+
+        # Should only return the file, and not crash on folder without id
+        assert len(result) == 1
+        assert result[0]["id"] == "file1"
+        # Folder without id should not be in cache
+        assert len(scanner.folder_cache) == 0
