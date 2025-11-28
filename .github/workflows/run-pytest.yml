@@ -6,8 +6,20 @@ name: Tests
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'gdrive_catalog/**'
+      - 'tests/**'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - '.github/workflows/run-pytest.yml'
   pull_request:
     branches: [ "main" ]
+    paths:
+      - 'gdrive_catalog/**'
+      - 'tests/**'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - '.github/workflows/run-pytest.yml'
 
 permissions:
   contents: read
