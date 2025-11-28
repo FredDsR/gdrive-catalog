@@ -88,7 +88,7 @@ gdrive-catalog scan --help
 
 - Read [README.md](README.md) for full documentation
 - See [EXAMPLES.md](EXAMPLES.md) for more usage examples
-- Check [LICENSE](LICENSE) for license information
+- Check [LICENSE](LICENSE) for license information (GPL v3)
 
 ## Security
 

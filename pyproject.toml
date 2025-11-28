@@ -3,6 +3,7 @@ name = "gdrive-catalog"
 version = "0.1.0"
 description = "CLI tool to scan Google Drive storage and create CSV catalogs with file metadata"
 readme = "README.md"
+license = "GPL-3.0-or-later"
 requires-python = ">=3.12"
 dependencies = [
     "google-api-python-client>=2.187.0",

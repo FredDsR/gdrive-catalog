@@ -122,6 +122,7 @@ Use descriptive branch names with conventional prefixes:
 - Validate and sanitize user input
 - Use environment variables for sensitive configuration
 - Follow principle of least privilege for API scopes
+- This software is licensed under GPL v3 - ensure any derivative works comply with GPL requirements
 
 ## Common tasks
 
