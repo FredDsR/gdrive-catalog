@@ -297,4 +297,4 @@ Contributions are welcome! Please feel free to submit a Issue or a Pull Request.
 
 ## AI Notice
 
-- Comprehensively uses [Copilot](https://github.com/features/copilot) as coding agent for development, reviewing and documentation process.
+- We comprehensively made use of [Copilot](https://github.com/features/copilot) as coding agent for development, reviewing and documenting process.
