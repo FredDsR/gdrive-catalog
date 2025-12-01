@@ -36,12 +36,15 @@ CATALOG_REQUIRED_COLUMNS = frozenset({"id"})
 CATALOG_FIELDNAMES = (
     "id",
     "name",
+    "mimeType",
     "size_bytes",
-    "duration_milliseconds",
-    "path",
-    "link",
-    "created_at",
-    "mime_type",
+    "created_time",
+    "modified_time",
+    "parents",
+    "gdrive_path",
+    "gdrive_link",
+    "web_content_link",
+    "md5Checksum",
 )
 
 

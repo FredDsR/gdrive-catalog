@@ -29,12 +29,15 @@ class TestCatalogSchema:
         expected = {
             "id",
             "name",
+            "mimeType",
             "size_bytes",
-            "duration_milliseconds",
-            "path",
-            "link",
-            "created_at",
-            "mime_type",
+            "created_time",
+            "modified_time",
+            "parents",
+            "gdrive_path",
+            "gdrive_link",
+            "web_content_link",
+            "md5Checksum",
         }
         assert set(CATALOG_FIELDNAMES) == expected
 
@@ -131,12 +134,15 @@ class TestLoadCatalogCsv:
                 {
                     "id": "file1",
                     "name": "test.pdf",
+                    "mimeType": "application/pdf",
                     "size_bytes": "1024",
-                    "duration_milliseconds": "",
-                    "path": "/test.pdf",
-                    "link": "https://drive.google.com/file/d/file1/view",
-                    "created_at": "2024-01-15T10:00:00.000Z",
-                    "mime_type": "application/pdf",
+                    "created_time": "2024-01-15T10:00:00.000Z",
+                    "modified_time": "2024-01-16T10:00:00.000Z",
+                    "parents": '["parent123"]',
+                    "gdrive_path": "/test.pdf",
+                    "gdrive_link": "https://drive.google.com/file/d/file1/view",
+                    "web_content_link": "https://drive.google.com/uc?id=file1&export=download",
+                    "md5Checksum": "abc123",
                 }
             )
 
@@ -159,12 +165,15 @@ class TestLoadCatalogCsv:
                     {
                         "id": f"file{i}",
                         "name": f"file{i}.pdf",
+                        "mimeType": "application/pdf",
                         "size_bytes": str(1024 * (i + 1)),
-                        "duration_milliseconds": "",
-                        "path": f"/file{i}.pdf",
-                        "link": f"https://drive.google.com/file/d/file{i}/view",
-                        "created_at": "2024-01-15T10:00:00.000Z",
-                        "mime_type": "application/pdf",
+                        "created_time": "2024-01-15T10:00:00.000Z",
+                        "modified_time": "2024-01-16T10:00:00.000Z",
+                        "parents": '["parent123"]',
+                        "gdrive_path": f"/file{i}.pdf",
+                        "gdrive_link": f"https://drive.google.com/file/d/file{i}/view",
+                        "web_content_link": f"https://drive.google.com/uc?id=file{i}&export=download",
+                        "md5Checksum": f"md5hash{i}",
                     }
                 )
 

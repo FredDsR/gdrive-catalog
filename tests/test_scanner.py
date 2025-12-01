@@ -71,6 +71,11 @@ class TestExtractFileData:
     def test_extract_basic_file_data(self):
         """Test extracting basic file data."""
         mock_service = MagicMock()
+        # Mock the API call for fetching parent folder
+        mock_service.service.files().get().execute.return_value = {
+            "name": "ParentFolder",
+            "parents": [],
+        }
         scanner = DriveScanner(mock_service)
 
         file = {
@@ -79,7 +84,11 @@ class TestExtractFileData:
             "mimeType": "text/plain",
             "size": "1024",
             "createdTime": "2024-01-15T10:30:00.000Z",
+            "modifiedTime": "2024-01-16T10:30:00.000Z",
             "webViewLink": "https://drive.google.com/file/d/file123/view",
+            "webContentLink": "https://drive.google.com/uc?id=file123&export=download",
+            "md5Checksum": "abc123def456",
+            "parents": ["parent123"],
         }
 
         data = scanner._extract_file_data(file)
@@ -87,14 +96,22 @@ class TestExtractFileData:
         assert data["id"] == "file123"
         assert data["name"] == "test_file.txt"
         assert data["size_bytes"] == "1024"
-        assert data["mime_type"] == "text/plain"
-        assert data["created_at"] == "2024-01-15T10:30:00.000Z"
-        assert data["link"] == "https://drive.google.com/file/d/file123/view"
-        assert data["duration_milliseconds"] == ""
+        assert data["mimeType"] == "text/plain"
+        assert data["created_time"] == "2024-01-15T10:30:00.000Z"
+        assert data["modified_time"] == "2024-01-16T10:30:00.000Z"
+        assert data["gdrive_link"] == "https://drive.google.com/file/d/file123/view"
+        assert data["web_content_link"] == "https://drive.google.com/uc?id=file123&export=download"
+        assert data["md5Checksum"] == "abc123def456"
+        assert data["parents"] == '["parent123"]'
 
-    def test_extract_file_data_with_video_duration(self):
-        """Test extracting file data with video duration."""
+    def test_extract_file_data_with_video(self):
+        """Test extracting file data with video."""
         mock_service = MagicMock()
+        # Mock the API call for fetching parent folder
+        mock_service.service.files().get().execute.return_value = {
+            "name": "ParentFolder",
+            "parents": [],
+        }
         scanner = DriveScanner(mock_service)
 
         file = {
@@ -103,19 +120,27 @@ class TestExtractFileData:
             "mimeType": "video/mp4",
             "size": "10485760",
             "createdTime": "2024-01-15T10:30:00.000Z",
+            "modifiedTime": "2024-01-16T10:30:00.000Z",
             "webViewLink": "https://drive.google.com/file/d/video123/view",
+            "webContentLink": "https://drive.google.com/uc?id=video123&export=download",
             "videoMediaMetadata": {"durationMillis": "60000"},
+            "parents": ["parent123"],
         }
 
         data = scanner._extract_file_data(file)
 
         assert data["id"] == "video123"
-        assert data["duration_milliseconds"] == "60000"
-        assert data["mime_type"] == "video/mp4"
+        assert data["mimeType"] == "video/mp4"
+        assert data["parents"] == '["parent123"]'
 
-    def test_extract_file_data_with_audio_no_duration(self):
-        """Test extracting file data for audio without duration metadata."""
+    def test_extract_file_data_with_audio(self):
+        """Test extracting file data for audio file."""
         mock_service = MagicMock()
+        # Mock the API call for fetching parent folder
+        mock_service.service.files().get().execute.return_value = {
+            "name": "ParentFolder",
+            "parents": [],
+        }
         scanner = DriveScanner(mock_service)
 
         file = {
@@ -124,13 +149,14 @@ class TestExtractFileData:
             "mimeType": "audio/mpeg",
             "size": "5242880",
             "createdTime": "2024-01-15T10:30:00.000Z",
+            "parents": ["parent123"],
         }
 
         data = scanner._extract_file_data(file)
 
         assert data["id"] == "audio123"
-        assert data["duration_milliseconds"] == ""
-        assert data["mime_type"] == "audio/mpeg"
+        assert data["mimeType"] == "audio/mpeg"
+        assert data["parents"] == '["parent123"]'
 
     def test_extract_file_data_default_link_fallback(self):
         """Test that default link is generated when webViewLink is missing."""
@@ -145,7 +171,7 @@ class TestExtractFileData:
 
         data = scanner._extract_file_data(file)
 
-        assert data["link"] == "https://drive.google.com/file/d/file456/view"
+        assert data["gdrive_link"] == "https://drive.google.com/file/d/file456/view"
 
     def test_extract_file_data_missing_fields(self):
         """Test extracting data when optional fields are missing."""
@@ -158,9 +184,13 @@ class TestExtractFileData:
 
         assert data["id"] == "minimal123"
         assert data["name"] == ""
-        assert data["size_bytes"] == "0"
-        assert data["created_at"] == ""
-        assert data["mime_type"] == ""
+        assert data["size_bytes"] == ""
+        assert data["created_time"] == ""
+        assert data["modified_time"] == ""
+        assert data["mimeType"] == ""
+        assert data["web_content_link"] == ""
+        assert data["md5Checksum"] == ""
+        assert data["parents"] == "[]"
 
 
 class TestBuildFilePath:
@@ -574,7 +604,7 @@ class TestScanDrive:
         assert result[0]["name"] == "report.pdf"
 
         # The path should contain the folder name from cache
-        assert "Documents" in result[0]["path"]
+        assert "Documents" in result[0]["gdrive_path"]
 
         # Verify that parent_folder was cached (reducing API calls)
         assert "parent_folder" in scanner.folder_cache

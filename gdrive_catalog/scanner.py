@@ -16,6 +16,7 @@
 
 """Scanner for Google Drive files with metadata extraction."""
 
+import json
 import logging
 from typing import Any
 
@@ -131,24 +132,24 @@ class DriveScanner:
         """
         file_id = file.get("id", "")
         mime_type = file.get("mimeType", "")
+        parents = file.get("parents", [])
 
-        # Get basic metadata
+        # Get basic metadata with new schema field names
         data = {
             "id": file_id,
             "name": file.get("name", ""),
-            "size_bytes": file.get("size", "0"),
-            "duration_milliseconds": "",
-            "path": self._build_file_path(file),
-            "link": file.get("webViewLink", f"https://drive.google.com/file/d/{file_id}/view"),
-            "created_at": file.get("createdTime", ""),
-            "mime_type": mime_type,
+            "mimeType": mime_type,
+            "size_bytes": file.get("size", ""),
+            "created_time": file.get("createdTime", ""),
+            "modified_time": file.get("modifiedTime", ""),
+            "parents": json.dumps(parents),
+            "gdrive_path": self._build_file_path(file),
+            "gdrive_link": file.get(
+                "webViewLink", f"https://drive.google.com/file/d/{file_id}/view"
+            ),
+            "web_content_link": file.get("webContentLink", ""),
+            "md5Checksum": file.get("md5Checksum", ""),
         }
-
-        # Try to extract duration for audio/video files
-        if mime_type in self.AUDIO_MIME_TYPES or mime_type in self.VIDEO_MIME_TYPES:
-            duration = self._extract_duration(file)
-            if duration:
-                data["duration_milliseconds"] = str(duration)
 
         return data
 
