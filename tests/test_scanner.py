@@ -93,10 +93,10 @@ class TestExtractFileData:
 
         data = scanner._extract_file_data(file)
 
-        assert data["id"] == "file123"
+        assert data["gdrive_id"] == "file123"
         assert data["name"] == "test_file.txt"
         assert data["size_bytes"] == "1024"
-        assert data["mimeType"] == "text/plain"
+        assert data["mime_type"] == "text/plain"
         assert data["created_time"] == "2024-01-15T10:30:00.000Z"
         assert data["modified_time"] == "2024-01-16T10:30:00.000Z"
         assert data["gdrive_link"] == "https://drive.google.com/file/d/file123/view"
@@ -129,8 +129,8 @@ class TestExtractFileData:
 
         data = scanner._extract_file_data(file)
 
-        assert data["id"] == "video123"
-        assert data["mimeType"] == "video/mp4"
+        assert data["gdrive_id"] == "video123"
+        assert data["mime_type"] == "video/mp4"
         assert data["parents"] == '["parent123"]'
 
     def test_extract_file_data_with_audio(self):
@@ -154,8 +154,8 @@ class TestExtractFileData:
 
         data = scanner._extract_file_data(file)
 
-        assert data["id"] == "audio123"
-        assert data["mimeType"] == "audio/mpeg"
+        assert data["gdrive_id"] == "audio123"
+        assert data["mime_type"] == "audio/mpeg"
         assert data["parents"] == '["parent123"]'
 
     def test_extract_file_data_default_link_fallback(self):
@@ -182,12 +182,12 @@ class TestExtractFileData:
 
         data = scanner._extract_file_data(file)
 
-        assert data["id"] == "minimal123"
+        assert data["gdrive_id"] == "minimal123"
         assert data["name"] == ""
         assert data["size_bytes"] == ""
         assert data["created_time"] == ""
         assert data["modified_time"] == ""
-        assert data["mimeType"] == ""
+        assert data["mime_type"] == ""
         assert data["web_content_link"] == ""
         assert data["md5Checksum"] == ""
         assert data["parents"] == "[]"
@@ -316,7 +316,7 @@ class TestScanDrive:
         result = scanner.scan_drive()
 
         assert len(result) == 1
-        assert result[0]["id"] == "file1"
+        assert result[0]["gdrive_id"] == "file1"
         assert result[0]["name"] == "document.pdf"
 
     def test_scan_drive_with_folder_id(self):
@@ -362,7 +362,7 @@ class TestScanDrive:
 
         # Should only return the file, not the folder (folder is queued for scanning)
         assert len(result) == 1
-        assert result[0]["id"] == "file1"
+        assert result[0]["gdrive_id"] == "file1"
 
     def test_scan_drive_skips_google_workspace_files(self):
         """Test that scanning skips Google Workspace files."""
@@ -394,7 +394,7 @@ class TestScanDrive:
 
         # Should only return the real file
         assert len(result) == 1
-        assert result[0]["id"] == "file1"
+        assert result[0]["gdrive_id"] == "file1"
 
     def test_scan_drive_recursive_folder_scanning(self):
         """Test that scanning discovers and scans subfolders."""
@@ -437,7 +437,7 @@ class TestScanDrive:
 
         # Should return both files
         assert len(result) == 2
-        file_ids = [f["id"] for f in result]
+        file_ids = [f["gdrive_id"] for f in result]
         assert "file1" in file_ids
         assert "file2" in file_ids
 
@@ -635,6 +635,6 @@ class TestScanDrive:
 
         # Should only return the file, and not crash on folder without id
         assert len(result) == 1
-        assert result[0]["id"] == "file1"
+        assert result[0]["gdrive_id"] == "file1"
         # Folder without id should not be in cache
         assert len(scanner.folder_cache) == 0

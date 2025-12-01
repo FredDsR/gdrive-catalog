@@ -136,9 +136,9 @@ class DriveScanner:
 
         # Get basic metadata with new schema field names
         data = {
-            "id": file_id,
+            "gdrive_id": file_id,
             "name": file.get("name", ""),
-            "mimeType": mime_type,
+            "mime_type": mime_type,
             "size_bytes": file.get("size", ""),
             "created_time": file.get("createdTime", ""),
             "modified_time": file.get("modifiedTime", ""),

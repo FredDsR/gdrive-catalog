@@ -64,9 +64,9 @@ class TestScanCommand:
         mock_scanner = MagicMock()
         mock_scanner.scan_drive.return_value = [
             {
-                "id": "file1",
+                "gdrive_id": "file1",
                 "name": "test.pdf",
-                "mimeType": "application/pdf",
+                "mime_type": "application/pdf",
                 "size_bytes": "1024",
                 "created_time": "2024-01-15T10:00:00.000Z",
                 "modified_time": "2024-01-16T10:00:00.000Z",
@@ -98,7 +98,7 @@ class TestScanCommand:
             reader = csv.DictReader(f)
             rows = list(reader)
             assert len(rows) == 1
-            assert rows[0]["id"] == "file1"
+            assert rows[0]["gdrive_id"] == "file1"
             assert rows[0]["name"] == "test.pdf"
 
     @patch("gdrive_catalog.cli.DriveScanner")
@@ -144,9 +144,9 @@ class TestScanCommand:
         # Create existing catalog with one file
         with open(output_file, "w", newline="") as f:
             fieldnames = [
-                "id",
+                "gdrive_id",
                 "name",
-                "mimeType",
+                "mime_type",
                 "size_bytes",
                 "created_time",
                 "modified_time",
@@ -160,9 +160,9 @@ class TestScanCommand:
             writer.writeheader()
             writer.writerow(
                 {
-                    "id": "existing_file",
+                    "gdrive_id": "existing_file",
                     "name": "old.pdf",
-                    "mimeType": "application/pdf",
+                    "mime_type": "application/pdf",
                     "size_bytes": "512",
                     "created_time": "2024-01-01T00:00:00.000Z",
                     "modified_time": "2024-01-02T00:00:00.000Z",
@@ -178,9 +178,9 @@ class TestScanCommand:
         mock_scanner = MagicMock()
         mock_scanner.scan_drive.return_value = [
             {
-                "id": "new_file",
+                "gdrive_id": "new_file",
                 "name": "new.pdf",
-                "mimeType": "application/pdf",
+                "mime_type": "application/pdf",
                 "size_bytes": "2048",
                 "created_time": "2024-01-15T10:00:00.000Z",
                 "modified_time": "2024-01-16T10:00:00.000Z",
@@ -211,7 +211,7 @@ class TestScanCommand:
         with open(output_file) as f:
             reader = csv.DictReader(f)
             rows = list(reader)
-            ids = [r["id"] for r in rows]
+            ids = [r["gdrive_id"] for r in rows]
             # Should contain both existing and new files
             assert "existing_file" in ids
             assert "new_file" in ids
@@ -230,9 +230,9 @@ class TestScanCommand:
         # Create existing catalog
         with open(output_file, "w", newline="") as f:
             fieldnames = [
-                "id",
+                "gdrive_id",
                 "name",
-                "mimeType",
+                "mime_type",
                 "size_bytes",
                 "created_time",
                 "modified_time",
@@ -246,9 +246,9 @@ class TestScanCommand:
             writer.writeheader()
             writer.writerow(
                 {
-                    "id": "file1",
+                    "gdrive_id": "file1",
                     "name": "old_name.pdf",
-                    "mimeType": "application/pdf",
+                    "mime_type": "application/pdf",
                     "size_bytes": "512",
                     "created_time": "2024-01-01T00:00:00.000Z",
                     "modified_time": "2024-01-02T00:00:00.000Z",
@@ -264,9 +264,9 @@ class TestScanCommand:
         mock_scanner = MagicMock()
         mock_scanner.scan_drive.return_value = [
             {
-                "id": "file1",
+                "gdrive_id": "file1",
                 "name": "new_name.pdf",
-                "mimeType": "application/pdf",
+                "mime_type": "application/pdf",
                 "size_bytes": "1024",
                 "created_time": "2024-01-15T10:00:00.000Z",
                 "modified_time": "2024-01-16T10:00:00.000Z",
@@ -298,7 +298,7 @@ class TestScanCommand:
             reader = csv.DictReader(f)
             rows = list(reader)
             assert len(rows) == 1
-            assert rows[0]["id"] == "file1"
+            assert rows[0]["gdrive_id"] == "file1"
             assert rows[0]["name"] == "new_name.pdf"
             assert rows[0]["size_bytes"] == "1024"
 
@@ -367,9 +367,9 @@ class TestScanCommand:
         mock_scanner = MagicMock()
         mock_scanner.scan_drive.return_value = [
             {
-                "id": f"file{i}",
+                "gdrive_id": f"file{i}",
                 "name": f"file{i}.pdf",
-                "mimeType": "application/pdf",
+                "mime_type": "application/pdf",
                 "size_bytes": "1024",
                 "created_time": "2024-01-15T10:00:00.000Z",
                 "modified_time": "2024-01-16T10:00:00.000Z",
@@ -427,13 +427,13 @@ class TestScanCSVValidation:
     def test_scan_update_rejects_csv_missing_id_column(
         self, mock_drive_service_class, mock_scanner_class, tmp_path
     ):
-        """Test scan with --update rejects CSV file missing 'id' column."""
+        """Test scan with --update rejects CSV file missing 'gdrive_id' column."""
         creds_file = tmp_path / "credentials.json"
         creds_file.write_text("{}")
 
         output_file = tmp_path / "invalid.csv"
 
-        # Create invalid CSV without 'id' column
+        # Create invalid CSV without 'gdrive_id' column
         with open(output_file, "w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=["name", "size_bytes", "path"])
             writer.writeheader()
@@ -454,7 +454,7 @@ class TestScanCSVValidation:
         assert result.exit_code == 1
         assert "Error" in result.stdout
         assert "missing required columns" in result.stdout.lower()
-        assert "id" in result.stdout.lower()
+        assert "gdrive_id" in result.stdout.lower()
 
     @patch("gdrive_catalog.cli.DriveScanner")
     @patch("gdrive_catalog.cli.DriveService")
@@ -522,17 +522,17 @@ class TestScanCSVValidation:
     def test_scan_update_accepts_valid_csv_with_only_id(
         self, mock_drive_service_class, mock_scanner_class, tmp_path
     ):
-        """Test scan with --update accepts CSV with at least 'id' column."""
+        """Test scan with --update accepts CSV with at least 'gdrive_id' column."""
         creds_file = tmp_path / "credentials.json"
         creds_file.write_text("{}")
 
         output_file = tmp_path / "minimal.csv"
 
-        # Create valid CSV with only 'id' column
+        # Create valid CSV with only 'gdrive_id' column
         with open(output_file, "w", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=["id"])
+            writer = csv.DictWriter(f, fieldnames=["gdrive_id"])
             writer.writeheader()
-            writer.writerow({"id": "file1"})
+            writer.writerow({"gdrive_id": "file1"})
 
         mock_scanner = MagicMock()
         mock_scanner.scan_drive.return_value = []

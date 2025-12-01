@@ -29,14 +29,14 @@ from gdrive_catalog.exceptions import CSVValidationError
 
 # Expected CSV schema for catalog files
 # This defines the columns that must be present in a valid catalog CSV
-CATALOG_REQUIRED_COLUMNS = frozenset({"id"})
+CATALOG_REQUIRED_COLUMNS = frozenset({"gdrive_id"})
 
 # All columns that are expected in a standard catalog CSV file
 # Used for writing CSV files and for validation reference
 CATALOG_FIELDNAMES = (
-    "id",
+    "gdrive_id",
     "name",
-    "mimeType",
+    "mime_type",
     "size_bytes",
     "created_time",
     "modified_time",
@@ -69,7 +69,7 @@ def validate_csv_headers(
         CSVValidationError: If headers are None/empty or missing required columns.
 
     Example:
-        >>> validate_csv_headers(["id", "name", "size_bytes"])  # OK
+        >>> validate_csv_headers(["gdrive_id", "name", "size_bytes"])  # OK
         >>> validate_csv_headers(["name", "size_bytes"])  # Raises CSVValidationError
     """
     if headers is None:
@@ -97,7 +97,7 @@ def load_catalog_csv(file_path: Path | str) -> dict[str, dict[str, Any]]:
     Load and validate a catalog CSV file, returning entries indexed by ID.
 
     This function reads a CSV file, validates it has the required schema,
-    and returns its contents as a dictionary keyed by the 'id' column.
+    and returns its contents as a dictionary keyed by the 'gdrive_id' column.
     This is the recommended way to load existing catalog data.
 
     Args:
@@ -125,10 +125,10 @@ def load_catalog_csv(file_path: Path | str) -> dict[str, dict[str, Any]]:
         # Validate headers before processing rows
         validate_csv_headers(reader.fieldnames, file_path=str_path)
 
-        # Process rows and build dictionary keyed by ID
+        # Process rows and build dictionary keyed by gdrive_id
         data: dict[str, dict[str, Any]] = {}
         for row in reader:
-            file_id = row.get("id")
+            file_id = row.get("gdrive_id")
             if file_id:
                 data[file_id] = row
 
