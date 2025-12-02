@@ -101,7 +101,7 @@ class TestExtractFileData:
         assert data["modified_time"] == "2024-01-16T10:30:00.000Z"
         assert data["gdrive_link"] == "https://drive.google.com/file/d/file123/view"
         assert data["web_content_link"] == "https://drive.google.com/uc?id=file123&export=download"
-        assert data["md5Checksum"] == "abc123def456"
+        assert data["md5_checksum"] == "abc123def456"
         assert data["parents"] == '["parent123"]'
 
     def test_extract_file_data_with_video(self):
@@ -189,7 +189,7 @@ class TestExtractFileData:
         assert data["modified_time"] == ""
         assert data["mime_type"] == ""
         assert data["web_content_link"] == ""
-        assert data["md5Checksum"] == ""
+        assert data["md5_checksum"] == ""
         assert data["parents"] == "[]"
 
 

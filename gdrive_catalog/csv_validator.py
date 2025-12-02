@@ -44,7 +44,7 @@ CATALOG_FIELDNAMES = (
     "gdrive_path",
     "gdrive_link",
     "web_content_link",
-    "md5Checksum",
+    "md5_checksum",
 )
 
 

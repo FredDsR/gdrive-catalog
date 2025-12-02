@@ -74,7 +74,7 @@ class TestScanCommand:
                 "gdrive_path": "/test.pdf",
                 "gdrive_link": "https://drive.google.com/file/d/file1/view",
                 "web_content_link": "https://drive.google.com/uc?id=file1&export=download",
-                "md5Checksum": "abc123",
+                "md5_checksum": "abc123",
             }
         ]
         mock_scanner_class.return_value = mock_scanner
@@ -154,7 +154,7 @@ class TestScanCommand:
                 "gdrive_path",
                 "gdrive_link",
                 "web_content_link",
-                "md5Checksum",
+                "md5_checksum",
             ]
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
@@ -170,7 +170,7 @@ class TestScanCommand:
                     "gdrive_path": "/old.pdf",
                     "gdrive_link": "https://drive.google.com/file/d/existing_file/view",
                     "web_content_link": "https://drive.google.com/uc?id=existing_file&export=download",
-                    "md5Checksum": "abc123",
+                    "md5_checksum": "abc123",
                 }
             )
 
@@ -188,7 +188,7 @@ class TestScanCommand:
                 "gdrive_path": "/new.pdf",
                 "gdrive_link": "https://drive.google.com/file/d/new_file/view",
                 "web_content_link": "https://drive.google.com/uc?id=new_file&export=download",
-                "md5Checksum": "def456",
+                "md5_checksum": "def456",
             }
         ]
         mock_scanner_class.return_value = mock_scanner
@@ -240,7 +240,7 @@ class TestScanCommand:
                 "gdrive_path",
                 "gdrive_link",
                 "web_content_link",
-                "md5Checksum",
+                "md5_checksum",
             ]
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
@@ -256,7 +256,7 @@ class TestScanCommand:
                     "gdrive_path": "/old_name.pdf",
                     "gdrive_link": "https://drive.google.com/file/d/file1/view",
                     "web_content_link": "https://drive.google.com/uc?id=file1&export=download",
-                    "md5Checksum": "abc123",
+                    "md5_checksum": "abc123",
                 }
             )
 
@@ -274,7 +274,7 @@ class TestScanCommand:
                 "gdrive_path": "/new_name.pdf",
                 "gdrive_link": "https://drive.google.com/file/d/file1/view",
                 "web_content_link": "https://drive.google.com/uc?id=file1&export=download",
-                "md5Checksum": "def456",
+                "md5_checksum": "def456",
             }
         ]
         mock_scanner_class.return_value = mock_scanner
@@ -377,7 +377,7 @@ class TestScanCommand:
                 "gdrive_path": f"/file{i}.pdf",
                 "gdrive_link": f"https://drive.google.com/file/d/file{i}/view",
                 "web_content_link": f"https://drive.google.com/uc?id=file{i}&export=download",
-                "md5Checksum": f"md5hash{i}",
+                "md5_checksum": f"md5hash{i}",
             }
             for i in range(5)
         ]

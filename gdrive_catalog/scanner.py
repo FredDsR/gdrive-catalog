@@ -148,7 +148,7 @@ class DriveScanner:
                 "webViewLink", f"https://drive.google.com/file/d/{file_id}/view"
             ),
             "web_content_link": file.get("webContentLink", ""),
-            "md5Checksum": file.get("md5Checksum", ""),
+            "md5_checksum": file.get("md5Checksum", ""),
         }
 
         return data
