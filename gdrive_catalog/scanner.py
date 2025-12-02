@@ -134,12 +134,20 @@ class DriveScanner:
         mime_type = file.get("mimeType", "")
         parents = file.get("parents", [])
 
+        # Extract duration for audio/video files
+        duration = ""
+        if mime_type in self.AUDIO_MIME_TYPES or mime_type in self.VIDEO_MIME_TYPES:
+            duration_value = self._extract_duration(file)
+            if duration_value is not None:
+                duration = str(duration_value)
+
         # Get basic metadata with new schema field names
         data = {
             "gdrive_id": file_id,
             "name": file.get("name", ""),
             "mime_type": mime_type,
             "size_bytes": file.get("size", ""),
+            "duration_milliseconds": duration,
             "created_time": file.get("createdTime", ""),
             "modified_time": file.get("modifiedTime", ""),
             "parents": json.dumps(parents),

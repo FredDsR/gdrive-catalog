@@ -131,6 +131,7 @@ class TestExtractFileData:
 
         assert data["gdrive_id"] == "video123"
         assert data["mime_type"] == "video/mp4"
+        assert data["duration_milliseconds"] == "60000"
         assert data["parents"] == '["parent123"]'
 
     def test_extract_file_data_with_audio(self):
@@ -156,6 +157,7 @@ class TestExtractFileData:
 
         assert data["gdrive_id"] == "audio123"
         assert data["mime_type"] == "audio/mpeg"
+        assert data["duration_milliseconds"] == ""
         assert data["parents"] == '["parent123"]'
 
     def test_extract_file_data_default_link_fallback(self):
@@ -185,6 +187,7 @@ class TestExtractFileData:
         assert data["gdrive_id"] == "minimal123"
         assert data["name"] == ""
         assert data["size_bytes"] == ""
+        assert data["duration_milliseconds"] == ""
         assert data["created_time"] == ""
         assert data["modified_time"] == ""
         assert data["mime_type"] == ""

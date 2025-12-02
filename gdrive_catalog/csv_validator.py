@@ -38,6 +38,7 @@ CATALOG_FIELDNAMES = (
     "name",
     "mime_type",
     "size_bytes",
+    "duration_milliseconds",
     "created_time",
     "modified_time",
     "parents",
