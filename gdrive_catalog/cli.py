@@ -109,7 +109,7 @@ def scan(
                     "\n[yellow]The existing catalog file has an invalid format.[/yellow]\n"
                     f"Expected columns: {', '.join(CATALOG_FIELDNAMES)}\n"
                     "\n[yellow]Options:[/yellow]\n"
-                    "1. Fix the CSV file to include the required 'id' column\n"
+                    "1. Fix the CSV file to include the required 'gdrive_id' column\n"
                     "2. Remove the existing file and run scan without --update\n"
                     "3. Specify a different output file with --output\n"
                 )
@@ -133,7 +133,7 @@ def scan(
         if update:
             # Update existing entries and add new ones
             for file in files:
-                file_id = file["id"]
+                file_id = file["gdrive_id"]
                 existing_data[file_id] = file
             files = list(existing_data.values())
             console.print(f"[green]Merged catalog contains {len(files)} total entries[/green]")

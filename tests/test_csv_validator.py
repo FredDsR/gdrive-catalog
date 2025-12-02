@@ -17,8 +17,8 @@ class TestCatalogSchema:
     """Tests for the catalog schema constants."""
 
     def test_required_columns_contains_id(self):
-        """Test that 'id' is in the required columns."""
-        assert "id" in CATALOG_REQUIRED_COLUMNS
+        """Test that 'gdrive_id' is in the required columns."""
+        assert "gdrive_id" in CATALOG_REQUIRED_COLUMNS
 
     def test_required_columns_is_frozen_set(self):
         """Test that required columns is a frozenset (immutable)."""
@@ -27,14 +27,18 @@ class TestCatalogSchema:
     def test_fieldnames_contains_all_expected_columns(self):
         """Test that fieldnames contains all expected columns."""
         expected = {
-            "id",
+            "gdrive_id",
             "name",
+            "mime_type",
             "size_bytes",
             "duration_milliseconds",
-            "path",
-            "link",
-            "created_at",
-            "mime_type",
+            "created_time",
+            "modified_time",
+            "parents",
+            "gdrive_path",
+            "gdrive_link",
+            "web_content_link",
+            "md5_checksum",
         }
         assert set(CATALOG_FIELDNAMES) == expected
 
@@ -58,13 +62,13 @@ class TestValidateCsvHeaders:
 
     def test_valid_headers_with_minimum_required(self):
         """Test validation passes with only required columns."""
-        headers = ["id"]
+        headers = ["gdrive_id"]
         # Should not raise
         validate_csv_headers(headers)
 
     def test_valid_headers_with_extra_columns(self):
         """Test validation passes with extra columns beyond required."""
-        headers = ["id", "extra_column", "another_extra"]
+        headers = ["gdrive_id", "extra_column", "another_extra"]
         # Should not raise
         validate_csv_headers(headers)
 
@@ -77,24 +81,24 @@ class TestValidateCsvHeaders:
         assert exc_info.value.missing_columns == CATALOG_REQUIRED_COLUMNS
 
     def test_invalid_headers_missing_id(self):
-        """Test validation fails when 'id' column is missing."""
+        """Test validation fails when 'gdrive_id' column is missing."""
         headers = ["name", "size_bytes", "path"]
 
         with pytest.raises(CSVValidationError) as exc_info:
             validate_csv_headers(headers)
 
         assert "missing required columns" in str(exc_info.value)
-        assert "id" in exc_info.value.missing_columns
+        assert "gdrive_id" in exc_info.value.missing_columns
         assert exc_info.value.actual_columns == {"name", "size_bytes", "path"}
 
     def test_invalid_headers_empty_list(self):
-        """Test validation fails when headers list is empty (missing id)."""
+        """Test validation fails when headers list is empty (missing gdrive_id)."""
         headers = []
 
         with pytest.raises(CSVValidationError) as exc_info:
             validate_csv_headers(headers)
 
-        assert "id" in exc_info.value.missing_columns
+        assert "gdrive_id" in exc_info.value.missing_columns
 
     def test_file_path_in_error_message(self):
         """Test that file path is included in error message."""
@@ -106,14 +110,14 @@ class TestValidateCsvHeaders:
 
     def test_custom_required_columns(self):
         """Test validation with custom required columns."""
-        headers = ["id", "name"]
-        custom_required = frozenset({"id", "name", "custom"})
+        headers = ["gdrive_id", "name"]
+        custom_required = frozenset({"gdrive_id", "name", "custom"})
 
         with pytest.raises(CSVValidationError) as exc_info:
             validate_csv_headers(headers, required_columns=custom_required)
 
         assert "custom" in exc_info.value.missing_columns
-        assert "id" not in exc_info.value.missing_columns
+        assert "gdrive_id" not in exc_info.value.missing_columns
         assert "name" not in exc_info.value.missing_columns
 
 
@@ -129,14 +133,17 @@ class TestLoadCatalogCsv:
             writer.writeheader()
             writer.writerow(
                 {
-                    "id": "file1",
+                    "gdrive_id": "file1",
                     "name": "test.pdf",
-                    "size_bytes": "1024",
-                    "duration_milliseconds": "",
-                    "path": "/test.pdf",
-                    "link": "https://drive.google.com/file/d/file1/view",
-                    "created_at": "2024-01-15T10:00:00.000Z",
                     "mime_type": "application/pdf",
+                    "size_bytes": "1024",
+                    "created_time": "2024-01-15T10:00:00.000Z",
+                    "modified_time": "2024-01-16T10:00:00.000Z",
+                    "parents": '["parent123"]',
+                    "gdrive_path": "/test.pdf",
+                    "gdrive_link": "https://drive.google.com/file/d/file1/view",
+                    "web_content_link": "https://drive.google.com/uc?id=file1&export=download",
+                    "md5_checksum": "abc123",
                 }
             )
 
@@ -157,14 +164,17 @@ class TestLoadCatalogCsv:
             for i in range(3):
                 writer.writerow(
                     {
-                        "id": f"file{i}",
+                        "gdrive_id": f"file{i}",
                         "name": f"file{i}.pdf",
-                        "size_bytes": str(1024 * (i + 1)),
-                        "duration_milliseconds": "",
-                        "path": f"/file{i}.pdf",
-                        "link": f"https://drive.google.com/file/d/file{i}/view",
-                        "created_at": "2024-01-15T10:00:00.000Z",
                         "mime_type": "application/pdf",
+                        "size_bytes": str(1024 * (i + 1)),
+                        "created_time": "2024-01-15T10:00:00.000Z",
+                        "modified_time": "2024-01-16T10:00:00.000Z",
+                        "parents": '["parent123"]',
+                        "gdrive_path": f"/file{i}.pdf",
+                        "gdrive_link": f"https://drive.google.com/file/d/file{i}/view",
+                        "web_content_link": f"https://drive.google.com/uc?id=file{i}&export=download",
+                        "md5_checksum": f"md5hash{i}",
                     }
                 )
 
@@ -176,7 +186,7 @@ class TestLoadCatalogCsv:
         assert "file2" in data
 
     def test_load_csv_missing_id_column(self, tmp_path):
-        """Test that loading a CSV without 'id' column raises error."""
+        """Test that loading a CSV without 'gdrive_id' column raises error."""
         csv_file = tmp_path / "invalid.csv"
 
         with open(csv_file, "w", newline="") as f:
@@ -187,7 +197,7 @@ class TestLoadCatalogCsv:
         with pytest.raises(CSVValidationError) as exc_info:
             load_catalog_csv(csv_file)
 
-        assert "id" in exc_info.value.missing_columns
+        assert "gdrive_id" in exc_info.value.missing_columns
         assert str(csv_file) in str(exc_info.value)
 
     def test_load_empty_csv_with_headers(self, tmp_path):
@@ -223,11 +233,11 @@ class TestLoadCatalogCsv:
         """Test loading a CSV with extra columns works."""
         csv_file = tmp_path / "extra.csv"
 
-        fieldnames = ["id", "name", "extra_column"]
+        fieldnames = ["gdrive_id", "name", "extra_column"]
         with open(csv_file, "w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
-            writer.writerow({"id": "file1", "name": "test.pdf", "extra_column": "value"})
+            writer.writerow({"gdrive_id": "file1", "name": "test.pdf", "extra_column": "value"})
 
         data = load_catalog_csv(csv_file)
 
@@ -235,15 +245,15 @@ class TestLoadCatalogCsv:
         assert data["file1"]["extra_column"] == "value"
 
     def test_load_csv_skips_rows_without_id(self, tmp_path):
-        """Test that rows with empty 'id' are skipped."""
+        """Test that rows with empty 'gdrive_id' are skipped."""
         csv_file = tmp_path / "mixed.csv"
 
         with open(csv_file, "w", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=["id", "name"])
+            writer = csv.DictWriter(f, fieldnames=["gdrive_id", "name"])
             writer.writeheader()
-            writer.writerow({"id": "file1", "name": "valid.pdf"})
-            writer.writerow({"id": "", "name": "empty_id.pdf"})
-            writer.writerow({"id": "file2", "name": "another.pdf"})
+            writer.writerow({"gdrive_id": "file1", "name": "valid.pdf"})
+            writer.writerow({"gdrive_id": "", "name": "empty_id.pdf"})
+            writer.writerow({"gdrive_id": "file2", "name": "another.pdf"})
 
         data = load_catalog_csv(csv_file)
 
@@ -256,9 +266,9 @@ class TestLoadCatalogCsv:
         csv_file = tmp_path / "catalog.csv"
 
         with open(csv_file, "w", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=["id", "name"])
+            writer = csv.DictWriter(f, fieldnames=["gdrive_id", "name"])
             writer.writeheader()
-            writer.writerow({"id": "file1", "name": "test.pdf"})
+            writer.writerow({"gdrive_id": "file1", "name": "test.pdf"})
 
         # Pass as string, not Path
         data = load_catalog_csv(str(csv_file))
@@ -304,8 +314,8 @@ class TestCSVValidationErrorAttributes:
 
     def test_error_message_includes_missing_columns(self):
         """Test that error message includes missing columns when provided."""
-        error = CSVValidationError("Missing columns", missing_columns={"id", "name"})
-        assert "['id', 'name']" in str(error)
+        error = CSVValidationError("Missing columns", missing_columns={"gdrive_id", "name"})
+        assert "['gdrive_id', 'name']" in str(error)
 
     def test_error_inheritance(self):
         """Test that CSVValidationError inherits from Exception."""
