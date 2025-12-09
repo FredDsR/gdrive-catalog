@@ -2,7 +2,7 @@
 
 from unittest.mock import MagicMock
 
-from gdrive_catalog.scanner import DriveScanner
+from gdrive_cli.scanner import DriveScanner
 
 
 class TestDriveScannerInit:

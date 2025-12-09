@@ -1,5 +1,5 @@
-# gdrive-catalog - CLI tool to scan Google Drive storage and create CSV catalogs
-# Copyright (C) 2024 gdrive-catalog contributors
+# gdrive-cli - CLI tool to scan Google Drive storage and create CSV catalogs
+# Copyright (C) 2024 gdrive-cli contributors
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-from gdrive_catalog.exceptions import FileDownloadError, FileListError, FileMetadataError
+from gdrive_cli.exceptions import FileDownloadError, FileListError, FileMetadataError
 
 # If modifying these scopes, delete the token.pickle file.
 SCOPES = ["https://www.googleapis.com/auth/drive.readonly"]

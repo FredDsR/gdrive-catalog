@@ -4,13 +4,13 @@ import csv
 
 import pytest
 
-from gdrive_catalog.csv_validator import (
+from gdrive_cli.csv_validator import (
     CATALOG_FIELDNAMES,
     CATALOG_REQUIRED_COLUMNS,
     load_catalog_csv,
     validate_csv_headers,
 )
-from gdrive_catalog.exceptions import CSVValidationError
+from gdrive_cli.exceptions import CSVValidationError
 
 
 class TestCatalogSchema:

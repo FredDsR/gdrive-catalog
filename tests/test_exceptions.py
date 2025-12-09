@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from gdrive_catalog.exceptions import (
+from gdrive_cli.exceptions import (
     DriveServiceError,
     FileDownloadError,
     FileListError,

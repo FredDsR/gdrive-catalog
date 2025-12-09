@@ -4,8 +4,8 @@ from unittest.mock import MagicMock, mock_open, patch
 
 import pytest
 
-from gdrive_catalog.drive_service import SCOPES, DriveService
-from gdrive_catalog.exceptions import FileDownloadError, FileListError, FileMetadataError
+from gdrive_cli.drive_service import SCOPES, DriveService
+from gdrive_cli.exceptions import FileDownloadError, FileListError, FileMetadataError
 
 
 class TestDriveServiceScopes:
@@ -19,28 +19,28 @@ class TestDriveServiceScopes:
 class TestDriveServiceInit:
     """Tests for DriveService initialization."""
 
-    @patch("gdrive_catalog.drive_service.DriveService._authenticate")
+    @patch("gdrive_cli.drive_service.DriveService._authenticate")
     def test_init_sets_credentials_path(self, mock_auth):
         """Test that initialization sets the credentials path."""
         mock_auth.return_value = MagicMock()
         service = DriveService(credentials_path="/path/to/creds.json")
         assert service.credentials_path == "/path/to/creds.json"
 
-    @patch("gdrive_catalog.drive_service.DriveService._authenticate")
+    @patch("gdrive_cli.drive_service.DriveService._authenticate")
     def test_init_default_credentials_path(self, mock_auth):
         """Test that initialization uses default credentials path."""
         mock_auth.return_value = MagicMock()
         service = DriveService()
         assert service.credentials_path == "credentials.json"
 
-    @patch("gdrive_catalog.drive_service.DriveService._authenticate")
+    @patch("gdrive_cli.drive_service.DriveService._authenticate")
     def test_init_sets_token_path(self, mock_auth):
         """Test that initialization sets the token path."""
         mock_auth.return_value = MagicMock()
         service = DriveService()
         assert service.token_path == "token.pickle"
 
-    @patch("gdrive_catalog.drive_service.DriveService._authenticate")
+    @patch("gdrive_cli.drive_service.DriveService._authenticate")
     def test_init_calls_authenticate(self, mock_auth):
         """Test that initialization calls _authenticate."""
         mock_auth.return_value = MagicMock()
@@ -51,10 +51,10 @@ class TestDriveServiceInit:
 class TestDriveServiceAuthenticate:
     """Tests for the _authenticate method."""
 
-    @patch("gdrive_catalog.drive_service.build")
-    @patch("gdrive_catalog.drive_service.InstalledAppFlow")
-    @patch("gdrive_catalog.drive_service.pickle")
-    @patch("gdrive_catalog.drive_service.Path")
+    @patch("gdrive_cli.drive_service.build")
+    @patch("gdrive_cli.drive_service.InstalledAppFlow")
+    @patch("gdrive_cli.drive_service.pickle")
+    @patch("gdrive_cli.drive_service.Path")
     def test_authenticate_new_credentials(self, mock_path, mock_pickle, mock_flow, mock_build):
         """Test authentication with no existing token."""
         # No existing token
@@ -74,9 +74,9 @@ class TestDriveServiceAuthenticate:
         mock_build.assert_called_once_with("drive", "v3", credentials=mock_creds)
         assert service.service is not None
 
-    @patch("gdrive_catalog.drive_service.build")
-    @patch("gdrive_catalog.drive_service.pickle")
-    @patch("gdrive_catalog.drive_service.Path")
+    @patch("gdrive_cli.drive_service.build")
+    @patch("gdrive_cli.drive_service.pickle")
+    @patch("gdrive_cli.drive_service.Path")
     def test_authenticate_with_valid_existing_token(self, mock_path, mock_pickle, mock_build):
         """Test authentication with valid existing token."""
         # Token exists
@@ -95,10 +95,10 @@ class TestDriveServiceAuthenticate:
         mock_build.assert_called_once_with("drive", "v3", credentials=mock_creds)
         assert service.service is not None
 
-    @patch("gdrive_catalog.drive_service.build")
-    @patch("gdrive_catalog.drive_service.Request")
-    @patch("gdrive_catalog.drive_service.pickle")
-    @patch("gdrive_catalog.drive_service.Path")
+    @patch("gdrive_cli.drive_service.build")
+    @patch("gdrive_cli.drive_service.Request")
+    @patch("gdrive_cli.drive_service.pickle")
+    @patch("gdrive_cli.drive_service.Path")
     def test_authenticate_refresh_expired_token(
         self, mock_path, mock_pickle, mock_request, mock_build
     ):
@@ -126,7 +126,7 @@ class TestDriveServiceAuthenticate:
 class TestDriveServiceListFiles:
     """Tests for the list_files method."""
 
-    @patch("gdrive_catalog.drive_service.DriveService._authenticate")
+    @patch("gdrive_cli.drive_service.DriveService._authenticate")
     def test_list_files_basic(self, mock_auth):
         """Test basic file listing."""
         mock_service = MagicMock()
@@ -143,7 +143,7 @@ class TestDriveServiceListFiles:
 
         assert result == expected_result
 
-    @patch("gdrive_catalog.drive_service.DriveService._authenticate")
+    @patch("gdrive_cli.drive_service.DriveService._authenticate")
     def test_list_files_with_folder_id(self, mock_auth):
         """Test file listing with folder ID."""
         mock_service = MagicMock()
@@ -158,7 +158,7 @@ class TestDriveServiceListFiles:
         # Verify the query was constructed correctly
         mock_service.files().list.assert_called()
 
-    @patch("gdrive_catalog.drive_service.DriveService._authenticate")
+    @patch("gdrive_cli.drive_service.DriveService._authenticate")
     def test_list_files_with_pagination(self, mock_auth):
         """Test file listing with pagination."""
         mock_service = MagicMock()
@@ -172,7 +172,7 @@ class TestDriveServiceListFiles:
 
         mock_service.files().list.assert_called()
 
-    @patch("gdrive_catalog.drive_service.DriveService._authenticate")
+    @patch("gdrive_cli.drive_service.DriveService._authenticate")
     def test_list_files_http_error(self, mock_auth):
         """Test file listing with HTTP error."""
         from googleapiclient.errors import HttpError
@@ -198,7 +198,7 @@ class TestDriveServiceListFiles:
 class TestDriveServiceGetFileMetadata:
     """Tests for the get_file_metadata method."""
 
-    @patch("gdrive_catalog.drive_service.DriveService._authenticate")
+    @patch("gdrive_cli.drive_service.DriveService._authenticate")
     def test_get_file_metadata_basic(self, mock_auth):
         """Test getting file metadata."""
         mock_service = MagicMock()
@@ -217,7 +217,7 @@ class TestDriveServiceGetFileMetadata:
 
         assert result == expected_result
 
-    @patch("gdrive_catalog.drive_service.DriveService._authenticate")
+    @patch("gdrive_cli.drive_service.DriveService._authenticate")
     def test_get_file_metadata_http_error(self, mock_auth):
         """Test getting file metadata with HTTP error."""
         from googleapiclient.errors import HttpError
@@ -243,7 +243,7 @@ class TestDriveServiceGetFileMetadata:
 class TestDriveServiceDownloadFile:
     """Tests for the download_file method."""
 
-    @patch("gdrive_catalog.drive_service.DriveService._authenticate")
+    @patch("gdrive_cli.drive_service.DriveService._authenticate")
     def test_download_file_basic(self, mock_auth):
         """Test downloading a file."""
         mock_service = MagicMock()
@@ -257,7 +257,7 @@ class TestDriveServiceDownloadFile:
 
         assert result == expected_content
 
-    @patch("gdrive_catalog.drive_service.DriveService._authenticate")
+    @patch("gdrive_cli.drive_service.DriveService._authenticate")
     def test_download_file_http_error(self, mock_auth):
         """Test downloading a file with HTTP error."""
         from googleapiclient.errors import HttpError

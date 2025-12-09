@@ -1,4 +1,4 @@
-# Copilot Instructions for gdrive-catalog
+# Copilot Instructions for gdrive-cli
 
 This repository contains a CLI tool to scan Google Drive storage and create CSV catalogs with file metadata.
 
@@ -17,7 +17,7 @@ This repository contains a CLI tool to scan Google Drive storage and create CSV 
 uv sync --dev
 
 # Run the CLI
-uv run gdrive-catalog [command]
+uv run gdrive-cli [command]
 
 # Run tests
 uv run pytest tests/ -v
