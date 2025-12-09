@@ -1,5 +1,5 @@
-# gdrive-catalog - CLI tool to scan Google Drive storage and create CSV catalogs
-# Copyright (C) 2024 gdrive-catalog contributors
+# gdrive-cli - CLI tool to scan Google Drive storage and create CSV catalogs
+# Copyright (C) 2024 gdrive-cli contributors
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 """CSV validation for Google Drive catalog files.
 
 This module provides reusable validation functionality for CSV files
-used by the gdrive-catalog application. It defines the expected schema
+used by the gdrive-cli application. It defines the expected schema
 and provides validation functions that can be used throughout the application.
 """
 

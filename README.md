@@ -1,6 +1,6 @@
-# gdrive-catalog
+# gdrive-cli
 
-[![Tests](https://github.com/FredDsR/gdrive-catalog/actions/workflows/run-pytest.yml/badge.svg)](https://github.com/FredDsR/gdrive-catalog/actions/workflows/run-pytest.yml)
+[![Tests](https://github.com/FredDsR/gdrive-cli/actions/workflows/run-pytest.yml/badge.svg)](https://github.com/FredDsR/gdrive-cli/actions/workflows/run-pytest.yml)
 
 A CLI tool to scan Google Drive storage and create CSV catalogs with comprehensive file metadata.
 
@@ -64,8 +64,8 @@ For each file, the tool captures:
 
 ```bash
 # Clone the repository
-git clone https://github.com/FredDsR/gdrive-catalog.git
-cd gdrive-catalog
+git clone https://github.com/FredDsR/gdrive-cli.git
+cd gdrive-cli
 
 # Install dependencies with uv
 uv sync
@@ -91,14 +91,14 @@ uv pip install -e .
 
 ## Usage
 
-> **Note:** After installing with `uv pip install -e .`, you can run commands directly as `gdrive-catalog`. Alternatively, use `uv run gdrive-catalog` if you haven't installed the package.
+> **Note:** After installing with `uv pip install -e .`, you can run commands directly as `gdrive-cli`. Alternatively, use `uv run gdrive-cli` if you haven't installed the package.
 
 ### Basic Usage
 
 Scan your entire Google Drive and create a catalog:
 
 ```bash
-gdrive-catalog scan
+gdrive-cli scan
 ```
 
 This creates a `catalog.csv` file with all file metadata.
@@ -108,7 +108,7 @@ This creates a `catalog.csv` file with all file metadata.
 Scan a specific Google Drive folder by providing its ID:
 
 ```bash
-gdrive-catalog scan --folder-id "your-folder-id-here"
+gdrive-cli scan --folder-id "your-folder-id-here"
 ```
 
 To get a folder ID, open the folder in Google Drive and copy the ID from the URL:
@@ -119,7 +119,7 @@ To get a folder ID, open the folder in Google Drive and copy the ID from the URL
 Specify a custom output file path:
 
 ```bash
-gdrive-catalog scan --output my-catalog.csv
+gdrive-cli scan --output my-catalog.csv
 ```
 
 ### Update Existing Catalog
@@ -127,7 +127,7 @@ gdrive-catalog scan --output my-catalog.csv
 Update an existing catalog with new or modified files:
 
 ```bash
-gdrive-catalog scan --update --output catalog.csv
+gdrive-cli scan --update --output catalog.csv
 ```
 
 This will:
@@ -141,13 +141,13 @@ This will:
 Use credentials from a different location:
 
 ```bash
-gdrive-catalog scan --credentials /path/to/credentials.json
+gdrive-cli scan --credentials /path/to/credentials.json
 ```
 
 ### All Options Combined
 
 ```bash
-gdrive-catalog scan \
+gdrive-cli scan \
   --output reports/my-catalog.csv \
   --folder-id "abc123xyz" \
   --update \
@@ -157,7 +157,7 @@ gdrive-catalog scan \
 ### Check Version
 
 ```bash
-gdrive-catalog version
+gdrive-cli version
 ```
 
 ## First Run Authentication
@@ -196,7 +196,7 @@ uv sync --dev
 ### Project Structure
 
 ```
-gdrive-catalog/
+gdrive-cli/
 ├── gdrive_catalog/
 │   ├── __init__.py       # Package initialization
 │   ├── cli.py            # CLI interface with Typer

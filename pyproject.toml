@@ -1,5 +1,5 @@
 [project]
-name = "gdrive-catalog"
+name = "gdrive-cli"
 version = "0.1.0"
 description = "CLI tool to scan Google Drive storage and create CSV catalogs with file metadata"
 readme = "README.md"
@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.scripts]
-gdrive-catalog = "gdrive_catalog.cli:main"
+gdrive-cli = "gdrive_catalog.cli:main"
 
 [build-system]
 requires = ["hatchling"]

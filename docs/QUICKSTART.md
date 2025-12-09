@@ -1,13 +1,13 @@
 # Quick Start Guide
 
-Get started with gdrive-catalog in just a few steps!
+Get started with gdrive-cli in just a few steps!
 
 ## 1. Install
 
 ```bash
 # Clone the repository
-git clone https://github.com/FredDsR/gdrive-catalog.git
-cd gdrive-catalog
+git clone https://github.com/FredDsR/gdrive-cli.git
+cd gdrive-cli
 
 # Install dependencies with uv
 uv sync
@@ -34,10 +34,10 @@ uv pip install -e .
 
 ```bash
 # Scan your entire Google Drive
-gdrive-catalog scan
+gdrive-cli scan
 
 # Or scan a specific folder
-gdrive-catalog scan --folder-id "your-folder-id"
+gdrive-cli scan --folder-id "your-folder-id"
 ```
 
 On first run, your browser will open to authenticate. Grant read-only access to your Drive.
@@ -50,20 +50,20 @@ Open `catalog.csv` to see your Drive contents with metadata!
 
 ```bash
 # Create a new catalog
-gdrive-catalog scan --output my-catalog.csv
+gdrive-cli scan --output my-catalog.csv
 
 # Update an existing catalog
-gdrive-catalog scan --output my-catalog.csv --update
+gdrive-cli scan --output my-catalog.csv --update
 
 # Scan specific folder
-gdrive-catalog scan --folder-id "abc123"
+gdrive-cli scan --folder-id "abc123"
 
 # Check version
-gdrive-catalog version
+gdrive-cli version
 
 # Get help
-gdrive-catalog --help
-gdrive-catalog scan --help
+gdrive-cli --help
+gdrive-cli scan --help
 ```
 
 ## What's in the CSV?

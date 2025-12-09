@@ -1,5 +1,5 @@
-# gdrive-catalog - CLI tool to scan Google Drive storage and create CSV catalogs
-# Copyright (C) 2024 gdrive-catalog contributors
+# gdrive-cli - CLI tool to scan Google Drive storage and create CSV catalogs
+# Copyright (C) 2024 gdrive-cli contributors
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

@@ -1,5 +1,5 @@
-# gdrive-catalog - CLI tool to scan Google Drive storage and create CSV catalogs
-# Copyright (C) 2024 gdrive-catalog contributors
+# gdrive-cli - CLI tool to scan Google Drive storage and create CSV catalogs
+# Copyright (C) 2024 gdrive-cli contributors
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ from gdrive_catalog.exceptions import CSVValidationError
 from gdrive_catalog.scanner import DriveScanner
 
 app = typer.Typer(
-    name="gdrive-catalog",
+    name="gdrive-cli",
     help="Scan Google Drive storage and create CSV catalogs with file metadata.",
 )
 console = Console()
@@ -163,7 +163,7 @@ def version():
     """Show version information."""
     from gdrive_catalog import __version__
 
-    console.print(f"gdrive-catalog version {__version__}")
+    console.print(f"gdrive-cli version {__version__}")
 
 
 def main():
