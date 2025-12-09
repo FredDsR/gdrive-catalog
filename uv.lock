@@ -177,7 +177,7 @@ wheels = [
 ]
 
 [[package]]
-name = "gdrive-catalog"
+name = "gdrive-cli"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

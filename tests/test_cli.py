@@ -411,7 +411,7 @@ class TestAppConfiguration:
 
     def test_app_name(self):
         """Test that the app has the correct name."""
-        assert app.info.name == "gdrive-catalog"
+        assert app.info.name == "gdrive-cli"
 
     def test_app_help_text(self):
         """Test that the app has help text."""
