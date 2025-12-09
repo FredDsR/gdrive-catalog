@@ -25,7 +25,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-from gdrive_catalog.exceptions import FileDownloadError, FileListError, FileMetadataError
+from gdrive_cli.exceptions import FileDownloadError, FileListError, FileMetadataError
 
 # If modifying these scopes, delete the token.pickle file.
 SCOPES = ["https://www.googleapis.com/auth/drive.readonly"]

@@ -16,7 +16,7 @@
 
 """Main entry point for gdrive-cli CLI."""
 
-from gdrive_catalog.cli import main
+from gdrive_cli.cli import main
 
 if __name__ == "__main__":
     main()

@@ -18,7 +18,7 @@
 
 __version__ = "0.1.0"
 
-from gdrive_catalog.exceptions import (
+from gdrive_cli.exceptions import (
     CSVValidationError,
     DriveServiceError,
     FileDownloadError,

@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 
 from typer.testing import CliRunner
 
-from gdrive_catalog.cli import app
+from gdrive_cli.cli import app
 
 runner = CliRunner()
 
@@ -50,8 +50,8 @@ class TestScanCommand:
         assert "--credentials" in clean_output
         assert "--update" in clean_output
 
-    @patch("gdrive_catalog.cli.DriveScanner")
-    @patch("gdrive_catalog.cli.DriveService")
+    @patch("gdrive_cli.cli.DriveScanner")
+    @patch("gdrive_cli.cli.DriveService")
     def test_scan_basic(self, mock_drive_service_class, mock_scanner_class, tmp_path):
         """Test basic scan command execution."""
         # Create fake credentials file
@@ -102,8 +102,8 @@ class TestScanCommand:
             assert rows[0]["gdrive_id"] == "file1"
             assert rows[0]["name"] == "test.pdf"
 
-    @patch("gdrive_catalog.cli.DriveScanner")
-    @patch("gdrive_catalog.cli.DriveService")
+    @patch("gdrive_cli.cli.DriveScanner")
+    @patch("gdrive_cli.cli.DriveService")
     def test_scan_with_folder_id(self, mock_drive_service_class, mock_scanner_class, tmp_path):
         """Test scan with specific folder ID."""
         creds_file = tmp_path / "credentials.json"
@@ -131,8 +131,8 @@ class TestScanCommand:
         assert result.exit_code == 0
         mock_scanner.scan_drive.assert_called_once_with(folder_id="test_folder_123")
 
-    @patch("gdrive_catalog.cli.DriveScanner")
-    @patch("gdrive_catalog.cli.DriveService")
+    @patch("gdrive_cli.cli.DriveScanner")
+    @patch("gdrive_cli.cli.DriveService")
     def test_scan_update_existing_catalog(
         self, mock_drive_service_class, mock_scanner_class, tmp_path
     ):
@@ -220,8 +220,8 @@ class TestScanCommand:
             assert "existing_file" in ids
             assert "new_file" in ids
 
-    @patch("gdrive_catalog.cli.DriveScanner")
-    @patch("gdrive_catalog.cli.DriveService")
+    @patch("gdrive_cli.cli.DriveScanner")
+    @patch("gdrive_cli.cli.DriveService")
     def test_scan_update_replaces_existing_entry(
         self, mock_drive_service_class, mock_scanner_class, tmp_path
     ):
@@ -309,8 +309,8 @@ class TestScanCommand:
             assert rows[0]["name"] == "new_name.pdf"
             assert rows[0]["size_bytes"] == "1024"
 
-    @patch("gdrive_catalog.cli.DriveScanner")
-    @patch("gdrive_catalog.cli.DriveService")
+    @patch("gdrive_cli.cli.DriveScanner")
+    @patch("gdrive_cli.cli.DriveService")
     def test_scan_creates_output_directory(
         self, mock_drive_service_class, mock_scanner_class, tmp_path
     ):
@@ -339,8 +339,8 @@ class TestScanCommand:
         assert output_file.parent.exists()
         assert output_file.exists()
 
-    @patch("gdrive_catalog.cli.DriveScanner")
-    @patch("gdrive_catalog.cli.DriveService")
+    @patch("gdrive_cli.cli.DriveScanner")
+    @patch("gdrive_cli.cli.DriveService")
     def test_scan_handles_exception(self, mock_drive_service_class, mock_scanner_class, tmp_path):
         """Test scan handles exceptions gracefully."""
         creds_file = tmp_path / "credentials.json"
@@ -362,8 +362,8 @@ class TestScanCommand:
         assert result.exit_code == 1
         assert "Error" in result.stdout
 
-    @patch("gdrive_catalog.cli.DriveScanner")
-    @patch("gdrive_catalog.cli.DriveService")
+    @patch("gdrive_cli.cli.DriveScanner")
+    @patch("gdrive_cli.cli.DriveService")
     def test_scan_displays_file_count(self, mock_drive_service_class, mock_scanner_class, tmp_path):
         """Test scan displays correct file counts."""
         creds_file = tmp_path / "credentials.json"
@@ -430,8 +430,8 @@ class TestAppConfiguration:
 class TestScanCSVValidation:
     """Tests for CSV validation in the scan command."""
 
-    @patch("gdrive_catalog.cli.DriveScanner")
-    @patch("gdrive_catalog.cli.DriveService")
+    @patch("gdrive_cli.cli.DriveScanner")
+    @patch("gdrive_cli.cli.DriveService")
     def test_scan_update_rejects_csv_missing_id_column(
         self, mock_drive_service_class, mock_scanner_class, tmp_path
     ):
@@ -464,8 +464,8 @@ class TestScanCSVValidation:
         assert "missing required columns" in result.stdout.lower()
         assert "gdrive_id" in result.stdout.lower()
 
-    @patch("gdrive_catalog.cli.DriveScanner")
-    @patch("gdrive_catalog.cli.DriveService")
+    @patch("gdrive_cli.cli.DriveScanner")
+    @patch("gdrive_cli.cli.DriveService")
     def test_scan_update_rejects_empty_csv(
         self, mock_drive_service_class, mock_scanner_class, tmp_path
     ):
@@ -491,8 +491,8 @@ class TestScanCSVValidation:
         assert result.exit_code == 1
         assert "Error" in result.stdout
 
-    @patch("gdrive_catalog.cli.DriveScanner")
-    @patch("gdrive_catalog.cli.DriveService")
+    @patch("gdrive_cli.cli.DriveScanner")
+    @patch("gdrive_cli.cli.DriveService")
     def test_scan_update_shows_helpful_message_for_invalid_csv(
         self, mock_drive_service_class, mock_scanner_class, tmp_path
     ):
@@ -525,8 +525,8 @@ class TestScanCSVValidation:
         assert "invalid format" in result.stdout.lower()
         assert "options" in result.stdout.lower()
 
-    @patch("gdrive_catalog.cli.DriveScanner")
-    @patch("gdrive_catalog.cli.DriveService")
+    @patch("gdrive_cli.cli.DriveScanner")
+    @patch("gdrive_cli.cli.DriveService")
     def test_scan_update_accepts_valid_csv_with_only_id(
         self, mock_drive_service_class, mock_scanner_class, tmp_path
     ):

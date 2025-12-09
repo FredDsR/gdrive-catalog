@@ -1,6 +1,6 @@
-"""Basic tests for gdrive-catalog package."""
+"""Basic tests for gdrive-cli package."""
 
-from gdrive_catalog import __version__
+from gdrive_cli import __version__
 
 
 def test_version():
@@ -10,15 +10,15 @@ def test_version():
 
 def test_imports():
     """Test that main modules can be imported."""
-    from gdrive_catalog.cli import app
-    from gdrive_catalog.drive_service import DriveService
-    from gdrive_catalog.exceptions import (
+    from gdrive_cli.cli import app
+    from gdrive_cli.drive_service import DriveService
+    from gdrive_cli.exceptions import (
         DriveServiceError,
         FileDownloadError,
         FileListError,
         FileMetadataError,
     )
-    from gdrive_catalog.scanner import DriveScanner
+    from gdrive_cli.scanner import DriveScanner
 
     assert app is not None
     assert DriveService is not None

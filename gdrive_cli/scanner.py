@@ -20,7 +20,7 @@ import json
 import logging
 from typing import Any
 
-from gdrive_catalog.drive_service import DriveService
+from gdrive_cli.drive_service import DriveService
 
 logger = logging.getLogger(__name__)
 

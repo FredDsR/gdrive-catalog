@@ -25,7 +25,7 @@ import csv
 from pathlib import Path
 from typing import Any
 
-from gdrive_catalog.exceptions import CSVValidationError
+from gdrive_cli.exceptions import CSVValidationError
 
 # Expected CSV schema for catalog files
 # This defines the columns that must be present in a valid catalog CSV
