@@ -122,6 +122,44 @@ class TestDriveServiceAuthenticate:
         mock_build.assert_called_once()
         assert service.service is not None
 
+    @patch("gdrive_cli.drive_service.build")
+    @patch("gdrive_cli.drive_service.InstalledAppFlow")
+    @patch("gdrive_cli.drive_service.Request")
+    @patch("gdrive_cli.drive_service.pickle")
+    @patch("gdrive_cli.drive_service.Path")
+    def test_authenticate_refresh_failure_falls_back_to_flow(
+        self, mock_path, mock_pickle, mock_request, mock_flow, mock_build
+    ):
+        """Test that a failed token refresh (invalid_grant) re-runs the OAuth flow."""
+        from google.auth.exceptions import RefreshError
+
+        # Token exists
+        mock_path.return_value.exists.return_value = True
+
+        # Mock expired credentials whose refresh token is no longer valid
+        mock_creds = MagicMock()
+        mock_creds.valid = False
+        mock_creds.expired = True
+        mock_creds.refresh_token = "stale_refresh_token"
+        mock_creds.refresh.side_effect = RefreshError("invalid_grant: Bad Request")
+        mock_pickle.load.return_value = mock_creds
+
+        # Fresh credentials returned by the interactive flow
+        new_creds = MagicMock()
+        new_creds.valid = True
+        mock_flow.from_client_secrets_file.return_value.run_local_server.return_value = new_creds
+
+        mock_build.return_value = MagicMock()
+
+        with patch("builtins.open", mock_open()):
+            service = DriveService(credentials_path="creds.json")
+
+        # Refresh was attempted, failed, and the flow was used to re-authenticate
+        mock_creds.refresh.assert_called_once()
+        mock_flow.from_client_secrets_file.assert_called_once()
+        mock_build.assert_called_once_with("drive", "v3", credentials=new_creds)
+        assert service.service is not None
+
 
 class TestDriveServiceListFiles:
     """Tests for the list_files method."""

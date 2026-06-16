@@ -20,6 +20,7 @@ import pickle
 from pathlib import Path
 from typing import Any
 
+from google.auth.exceptions import RefreshError
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
@@ -57,16 +58,26 @@ class DriveService:
         # If no valid credentials, authenticate
         if not creds or not creds.valid:
             if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
+                try:
+                    creds.refresh(Request())
+                except RefreshError:
+                    # The stored refresh token is no longer valid (e.g. revoked,
+                    # expired, or the OAuth consent screen is in testing mode).
+                    # Fall back to a fresh interactive login.
+                    creds = self._run_flow()
             else:
-                flow = InstalledAppFlow.from_client_secrets_file(self.credentials_path, SCOPES)
-                creds = flow.run_local_server(port=0)
+                creds = self._run_flow()
 
             # Save credentials for next time
             with open(self.token_path, "wb") as token:
                 pickle.dump(creds, token)
 
         return build("drive", "v3", credentials=creds)
+
+    def _run_flow(self):
+        """Run the interactive OAuth flow and return fresh credentials."""
+        flow = InstalledAppFlow.from_client_secrets_file(self.credentials_path, SCOPES)
+        return flow.run_local_server(port=0)
 
     def list_files(
         self,
